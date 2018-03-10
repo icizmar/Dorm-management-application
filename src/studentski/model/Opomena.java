@@ -6,6 +6,7 @@
 package studentski.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 @Table
 public class Opomena extends Entitet implements Serializable{
     
+    private Date izdavanjeOpomene;
     private boolean placenoNakonOpomene;
     @ManyToOne
     private Racun racun;
@@ -38,4 +40,11 @@ public class Opomena extends Entitet implements Serializable{
         this.racun = racun;
     }
     
+    public Date getIzdavanjeOpomene() {
+        return izdavanjeOpomene;
+    }
+
+    public void setIzdavanjeOpomene(Date izdavanjeOpomene) {
+        this.izdavanjeOpomene = izdavanjeOpomene;
+    }
 }

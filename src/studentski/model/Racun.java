@@ -6,6 +6,7 @@
 package studentski.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -21,6 +22,8 @@ import javax.persistence.Table;
 @Table
 public class Racun extends Entitet implements Serializable{
     
+    private Date datumIzdavanjaRacuna;
+    private Date datumUplateRacuna;
     private boolean placen;
     @ManyToOne
     private Student student;
@@ -49,6 +52,22 @@ public class Racun extends Entitet implements Serializable{
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public Date getDatumIzdavanjaRacuna() {
+        return datumIzdavanjaRacuna;
+    }
+
+    public void setDatumIzdavanjaRacuna(Date datumIzdavanjaRacuna) {
+        this.datumIzdavanjaRacuna = datumIzdavanjaRacuna;
+    }
+
+    public Date getDatumUplateRacuna() {
+        return datumUplateRacuna;
+    }
+
+    public void setDatumUplateRacuna(Date datumUplateRacuna) {
+        this.datumUplateRacuna = datumUplateRacuna;
     }
     
 }

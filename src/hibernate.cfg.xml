@@ -6,7 +6,7 @@
  <session-factory>  
     <!-- 
     Kreirati bazu 
-        create database edunovaj17 character set utf8 collate utf8_general_ci;
+        create database studentski character set utf8 collate utf8_general_ci;
 
      --> 
     <property name="connection.url">jdbc:mysql://localhost:3306/studentski</property>

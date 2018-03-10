@@ -49,5 +49,10 @@ public class Student extends Osoba implements Serializable {
     public void setSoba(Soba soba) {
         this.soba = soba;
     }
+
+    @Override
+    public String toString() {
+        return getIme() + " " + getPrezime();
+    }
     
 }

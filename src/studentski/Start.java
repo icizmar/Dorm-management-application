@@ -7,6 +7,7 @@ package studentski;
 
 
 import studentski.controller.Obrada;
+import studentski.model.Student;
 import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
 import studentski.view.Izbornik;
@@ -22,6 +23,7 @@ public class Start {
     public static void main(String[] args) {
         HibernateUtil.getSession();
         new Izbornik().setVisible(true);
+        
     }
     
 }
