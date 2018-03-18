@@ -7,11 +7,13 @@ package studentski.view;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import studentski.controller.Obrada;
 import studentski.controller.ObradaStudent;
+import studentski.controller.StucException;
 import studentski.model.Student;
 
 /**
@@ -22,6 +24,8 @@ public class Studenti extends javax.swing.JFrame {
 
     private ObradaStudent obrada;
     private Student odabraniStudent;
+    private Student pojedinostiStudenta;
+
     /**
      * Creates new form Studenti
      */
@@ -60,6 +64,8 @@ public class Studenti extends javax.swing.JFrame {
         btnPromjeni = new javax.swing.JButton();
         btnObrisi = new javax.swing.JButton();
         btnPojedinosti = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        txtSpol = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -71,6 +77,12 @@ public class Studenti extends javax.swing.JFrame {
         jScrollPane1.setViewportView(lista);
 
         jLabel1.setText("Uvjet");
+
+        txtUvjet.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtUvjetKeyPressed(evt);
+            }
+        });
 
         btnTrazi.setText("Trazi");
         btnTrazi.addActionListener(new java.awt.event.ActionListener() {
@@ -96,8 +108,18 @@ public class Studenti extends javax.swing.JFrame {
         jLabel6.setText("Broj ugovora");
 
         btnNovi.setText("Novi");
+        btnNovi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNoviActionPerformed(evt);
+            }
+        });
 
         btnPromjeni.setText("Promjeni");
+        btnPromjeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPromjeniActionPerformed(evt);
+            }
+        });
 
         btnObrisi.setText("Obriši");
 
@@ -107,6 +129,8 @@ public class Studenti extends javax.swing.JFrame {
                 btnPojedinostiActionPerformed(evt);
             }
         });
+
+        jLabel7.setText("Spol");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -121,7 +145,9 @@ public class Studenti extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnTrazi)
-                    .addComponent(btnPojedinosti))
+                    .addComponent(btnPojedinosti)
+                    .addComponent(jLabel7)
+                    .addComponent(txtSpol, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2)
@@ -167,10 +193,14 @@ public class Studenti extends javax.swing.JFrame {
                             .addComponent(jLabel4)
                             .addComponent(btnObrisi))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPrezime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtPrezime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5)
-                        .addGap(11, 11, 11)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(txtSpol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(8, 8, 8)
                         .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel6)
@@ -182,7 +212,7 @@ public class Studenti extends javax.swing.JFrame {
                             .addComponent(btnTrazi))
                         .addGap(23, 23, 23)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -209,8 +239,48 @@ public class Studenti extends javax.swing.JFrame {
     }//GEN-LAST:event_listaValueChanged
 
     private void btnPojedinostiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPojedinostiActionPerformed
-        new PojedinostiStudent().setVisible(true);
+        pojedinostiStudenta = new Student();
+        pojedinostiStudenta = lista.getSelectedValue();
+        if(pojedinostiStudenta == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Prvo odaberite studenta");
+            return;
+        }
+        new PojedinostiStudent(pojedinostiStudenta).setVisible(true);
     }//GEN-LAST:event_btnPojedinostiActionPerformed
+
+    private void btnNoviActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNoviActionPerformed
+        Student st = new Student();
+        st = napuniObjekt(st);
+        try {
+            obrada.spremi(st);
+        } catch (StucException e) {
+            switch(e.getKomponenta()){
+                case "ime":
+                    txtIme.requestFocus();
+                    break;
+                case "prezime":
+                    txtPrezime.requestFocus();
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(getRootPane(), e.getKomponenta());
+            }
+        }
+    }//GEN-LAST:event_btnNoviActionPerformed
+
+    private void txtUvjetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUvjetKeyPressed
+        if(evt.getKeyChar()==KeyEvent.VK_ENTER){
+            trazi();
+        }
+    }//GEN-LAST:event_txtUvjetKeyPressed
+
+    private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
+        Student st = new Student();
+        st = napuniObjekt(st);
+        try {
+            obrada.promjeni(st);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnPromjeniActionPerformed
 
     /**
      * @param args the command line arguments
@@ -228,6 +298,7 @@ public class Studenti extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<Student> lista;
     private javax.swing.JTextField txtBrojUgovora;
@@ -235,6 +306,7 @@ public class Studenti extends javax.swing.JFrame {
     private javax.swing.JTextField txtIme;
     private javax.swing.JTextField txtOib;
     private javax.swing.JTextField txtPrezime;
+    private javax.swing.JTextField txtSpol;
     private javax.swing.JTextField txtUvjet;
     // End of variables declaration//GEN-END:variables
 
@@ -251,11 +323,21 @@ public class Studenti extends javax.swing.JFrame {
         this.lista.setModel(model);
     }
 
-    private void popuniStudent(Student sd) {
-        txtOib.setText(sd.getOib());
-        txtIme.setText(sd.getIme());
-        txtPrezime.setText(sd.getPrezime());
-        txtEmail.setText(sd.getEmail());
-        txtBrojUgovora.setText(sd.getBrojUgovora());
+    private void popuniStudent(Student st) {
+        txtOib.setText(st.getOib());
+        txtIme.setText(st.getIme());
+        txtPrezime.setText(st.getPrezime());
+        txtEmail.setText(st.getEmail());
+        txtBrojUgovora.setText(st.getBrojUgovora());
+    }
+
+    private Student napuniObjekt(Student st) {
+        st.setIme(txtIme.getText());
+        st.setPrezime(txtPrezime.getText());
+        st.setOib(txtOib.getText());
+        st.setEmail(txtEmail.getText());
+        //st.setSpol(true);
+        st.setBrojUgovora(txtBrojUgovora.getText());
+        return st;
     }
 }

@@ -6,6 +6,7 @@
 package studentski.controller;
 
 import java.util.List;
+import javax.swing.JOptionPane;
 import studentski.model.Student;
 import studentski.pomocno.HibernateUtil;
 
@@ -30,5 +31,22 @@ public class ObradaStudent {
                 .list();
     }
     
+    public Student spremi(Student st) throws StucException {
+        if(st.getIme().trim().length()==0){
+            throw new StucException("Obavezno unesite ime!", "ime");
+        }
+        obrada.save(st);
+        return st;
+    }
     
+    public Student promjeni(Student st) throws StucException{
+        if(st.getIme().trim().length()==0){
+            throw new StucException("Obavezno unesite ime!", "ime");
+        }
+        if(st.getIme().trim().length()==0){
+            throw new StucException("Obavezno unesite Prezime!", "prezime");
+        }
+        obrada.save(st);
+        return st;
+    }
 }
