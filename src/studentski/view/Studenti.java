@@ -25,6 +25,8 @@ public class Studenti extends javax.swing.JFrame {
     private ObradaStudent obrada;
     private Student odabraniStudent;
     private Student pojedinostiStudenta;
+    private String musko;
+    private String zensko;
 
     /**
      * Creates new form Studenti
@@ -122,6 +124,11 @@ public class Studenti extends javax.swing.JFrame {
         });
 
         btnObrisi.setText("Obriši");
+        btnObrisi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnObrisiActionPerformed(evt);
+            }
+        });
 
         btnPojedinosti.setText("Pojedinosti");
         btnPojedinosti.addActionListener(new java.awt.event.ActionListener() {
@@ -261,9 +268,8 @@ public class Studenti extends javax.swing.JFrame {
                 case "prezime":
                     txtPrezime.requestFocus();
                     break;
-                default:
-                    JOptionPane.showMessageDialog(getRootPane(), e.getKomponenta());
             }
+            JOptionPane.showMessageDialog(getRootPane(), e.getMessage());
         }
     }//GEN-LAST:event_btnNoviActionPerformed
 
@@ -274,13 +280,28 @@ public class Studenti extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUvjetKeyPressed
 
     private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
-        Student st = new Student();
-        st = napuniObjekt(st);
         try {
-            obrada.promjeni(st);
+            Student st = lista.getSelectedValue();
+            if(st == null){
+                return;
+            }
+            obrada.spremi(st);
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(getRootPane(), e.getMessage());
         }
     }//GEN-LAST:event_btnPromjeniActionPerformed
+
+    private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed
+        try{
+            Student st = lista.getSelectedValue();
+            if(st == null){
+            return;
+            }
+            obrada.obrisi(st);
+        }catch(Exception e){
+            
+        }
+    }//GEN-LAST:event_btnObrisiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -336,7 +357,7 @@ public class Studenti extends javax.swing.JFrame {
         st.setPrezime(txtPrezime.getText());
         st.setOib(txtOib.getText());
         st.setEmail(txtEmail.getText());
-        //st.setSpol(true);
+        //st.setSpol();
         st.setBrojUgovora(txtBrojUgovora.getText());
         return st;
     }

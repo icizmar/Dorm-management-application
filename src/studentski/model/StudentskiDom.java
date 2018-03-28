@@ -6,6 +6,7 @@
 package studentski.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -24,7 +25,7 @@ public class StudentskiDom extends Entitet implements Serializable {
     private String brojTelefona;
     
     @OneToMany(mappedBy = "studentskiDom")
-    private List<Soba> sobe;
+    private List<Soba> sobe = new ArrayList<>();
 
     public List<Soba> getSobe() {
         return sobe;

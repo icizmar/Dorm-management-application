@@ -6,6 +6,7 @@
 package studentski.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -26,7 +27,7 @@ public class Soba extends Entitet implements Serializable{
     @ManyToOne
     private StudentskiDom studentskiDom;
     @OneToMany(mappedBy = "soba")
-    private List<Student> studenti;
+    private List<Student> studenti = new ArrayList<>();
 
     public StudentskiDom getStudentskiDom() {
         return studentskiDom;
@@ -68,5 +69,11 @@ public class Soba extends Entitet implements Serializable{
         this.studenti = studenti;
     }
 
+    @Override
+    public String toString() {
+        return getBrojSobe() + " " + getPaviljon();
+    }
+    
+    
    
 }

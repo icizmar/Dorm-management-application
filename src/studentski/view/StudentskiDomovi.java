@@ -199,9 +199,11 @@ public class StudentskiDomovi extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Prvo odaberite studentski dom koji želite obrisati");
             return;
         }
+        
         boolean mozeObrisati=true;
-        for (Soba so : sd.getSobe()) {
-            if(!so.isObrisano()){
+        
+        for (Soba s : sd.getSobe()) {
+            if(!s.isObrisano()){
                 mozeObrisati=false;
                 break;
             }    

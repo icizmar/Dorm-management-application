@@ -6,6 +6,7 @@
 package studentski.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -24,7 +25,15 @@ public class Student extends Osoba implements Serializable {
     @ManyToOne
     private Soba soba;
     @OneToMany(mappedBy = "student")
-    private List<Racun> racuni;
+    private List<Racun> racuni = new ArrayList<>();
+    
+    public Student(){
+        super();
+    }
+    
+    public Student(String ime, String prezime){
+        super(ime,prezime);
+    }
 
     public List<Racun> getRacuni() {
         return racuni;

@@ -22,11 +22,7 @@ public class PojedinostiStudent extends javax.swing.JFrame {
         initComponents();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
-        txtOIB.setText(st.getOib());
-        txtIme.setText(st.getIme());
-        txtPrezime.setText(st.getPrezime());
-        txtEmail.setText(st.getEmail());
-        txtBrojUgovora.setText(st.getBrojUgovora());
+        napuniPolja(st);
     }
 
     /**
@@ -146,4 +142,17 @@ public class PojedinostiStudent extends javax.swing.JFrame {
     private javax.swing.JTextField txtPrezime;
     private javax.swing.JTextField txtSpol;
     // End of variables declaration//GEN-END:variables
+
+    private void napuniPolja(Student st) {
+        txtOIB.setText(st.getOib());
+        txtIme.setText(st.getIme());
+        txtPrezime.setText(st.getPrezime());
+        txtEmail.setText(st.getEmail());
+        if(!st.isSpol()){
+            txtSpol.setText("Žensko");
+        }else if(st.isSpol()){
+            txtSpol.setText("Muško");
+        }
+        txtBrojUgovora.setText(st.getBrojUgovora());
+    }
 }

@@ -7,13 +7,30 @@ package studentski.view;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import studentski.controller.Obrada;
+import studentski.controller.ObradaSoba;
+import studentski.model.Soba;
+import studentski.model.Student;
+import studentski.pomocno.HibernateUtil;
 
 /**
  *
  * @author Ivan
  */
 public class Sobe extends javax.swing.JFrame {
-
+    
+    private Obrada<Soba> obrada;
+    private ObradaSoba obradaSoba;
+    private Integer brojSobe;
+    private String paviljon;
+    private Soba odabranaSoba;
+    private Student pojedinostiStudenta;
+    
     /**
      * Creates new form Sobe
      */
@@ -21,6 +38,10 @@ public class Sobe extends javax.swing.JFrame {
         initComponents();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+        obrada = new Obrada<>();
+        obradaSoba = new ObradaSoba();
+        napuniBrojSoba();
+        napuniPaviljone();
     }
 
     /**
@@ -32,21 +53,265 @@ public class Sobe extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        cmbBrojSobe = new javax.swing.JComboBox<>();
+        cmbPaviljon = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listaSoba = new javax.swing.JList<>();
+        btnTrazi = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listaStudenta = new javax.swing.JList<>();
+        jLabel4 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        btnNovi = new javax.swing.JButton();
+        btnPromjeni = new javax.swing.JButton();
+        btnObrisi = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jLabel1.setText("Odaberi sobu:");
+
+        cmbBrojSobe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbBrojSobeActionPerformed(evt);
+            }
+        });
+
+        cmbPaviljon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbPaviljonActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("2. Odaberi broj sobe:");
+
+        jLabel3.setText("1. Odaberi paviljon:");
+
+        listaSoba.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listaSobaValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(listaSoba);
+
+        btnTrazi.setText("Trazi sobu");
+        btnTrazi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTraziActionPerformed(evt);
+            }
+        });
+
+        jScrollPane2.setViewportView(listaStudenta);
+
+        jLabel4.setText("Studenti u odabranoj sobi:");
+
+        jButton1.setText("Pojedinosti studenta");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Rad sa studentima u sobi:");
+
+        btnNovi.setText("Novi");
+        btnNovi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNoviActionPerformed(evt);
+            }
+        });
+
+        btnPromjeni.setText("Promjeni");
+        btnPromjeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPromjeniActionPerformed(evt);
+            }
+        });
+
+        btnObrisi.setText("Obriši");
+
+        jButton2.setText("Unesi novu sobu");
+
+        jLabel6.setText("3. Traži odabranu sobu:");
+
+        jLabel7.setText("Unesi novu sobu:");
+
+        jLabel8.setText("Odabrana soba:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cmbPaviljon, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(24, 24, 24)))
+                        .addComponent(jLabel2)
+                        .addGap(28, 28, 28)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(25, 25, 25)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(btnNovi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btnPromjeni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btnObrisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(60, 60, 60))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cmbBrojSobe, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(95, 95, 95)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton2)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnTrazi, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(76, 76, 76)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbPaviljon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTrazi)
+                    .addComponent(cmbBrojSobe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel7))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jButton2)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 17, Short.MAX_VALUE)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnNovi)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPromjeni)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnObrisi)))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cmbBrojSobeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBrojSobeActionPerformed
+  
+    }//GEN-LAST:event_cmbBrojSobeActionPerformed
+
+    private void btnTraziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTraziActionPerformed
+        DefaultListModel<Soba> model = new DefaultListModel<>();
+        brojSobe = ((Integer) cmbBrojSobe.getSelectedItem());
+        paviljon = ((String) cmbPaviljon.getSelectedItem());
+        List<Soba> lista = obradaSoba.getSoba(brojSobe, paviljon);
+        
+        for (Soba soba : lista) {
+            model.addElement(soba);
+        }
+        this.listaSoba.setModel(model);
+    }//GEN-LAST:event_btnTraziActionPerformed
+
+    private void cmbPaviljonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPaviljonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbPaviljonActionPerformed
+
+    private void listaSobaValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listaSobaValueChanged
+        if(evt.getValueIsAdjusting()){
+            return;
+        }
+        odabranaSoba = listaSoba.getSelectedValue();
+        if(odabranaSoba == null){
+            return;
+        }
+        napuniListuStudenta(odabranaSoba);
+    }//GEN-LAST:event_listaSobaValueChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        pojedinostiStudenta = new Student();
+        pojedinostiStudenta = listaStudenta.getSelectedValue();
+        if(pojedinostiStudenta == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Prvo odaberite studenta");
+            return;
+        }
+        new PojedinostiStudent(pojedinostiStudenta).setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnNoviActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNoviActionPerformed
+        if(odabranaSoba == null){
+           JOptionPane.showMessageDialog(getRootPane(), "Prvo odaberite sobu"); 
+           return;
+        }
+        Long count = ((Long) HibernateUtil.getSession().createQuery("select count(*) from Student a "
+                + " where a.obrisano=false and soba like :uvjet ")
+                .setString("uvjet", "%" + odabranaSoba.getSifra() + "%")
+                .uniqueResult());
+        Integer brojStudenataUSobi = count.intValue();
+        if(brojStudenataUSobi >= odabranaSoba.getBrojKreveta()){
+            JOptionPane.showMessageDialog(getRootPane(), "U sobi se već nalazi dva studenta");
+            return;
+        }
+        new StudentiNovi(odabranaSoba).setVisible(true);
+    }//GEN-LAST:event_btnNoviActionPerformed
+
+    private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
+        Student st = listaStudenta.getSelectedValue();
+        if(st == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Obavezno odaberite studenta!");
+            return;
+        }
+        new StudentiPromjena(st).setVisible(true);
+    }//GEN-LAST:event_btnPromjeniActionPerformed
 
     /**
      * @param args the command line arguments
@@ -54,5 +319,56 @@ public class Sobe extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnNovi;
+    private javax.swing.JButton btnObrisi;
+    private javax.swing.JButton btnPromjeni;
+    private javax.swing.JButton btnTrazi;
+    private javax.swing.JComboBox<Integer> cmbBrojSobe;
+    private javax.swing.JComboBox<String> cmbPaviljon;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList<Soba> listaSoba;
+    private javax.swing.JList<Student> listaStudenta;
     // End of variables declaration//GEN-END:variables
+
+    private void napuniBrojSoba() {
+        DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<>();
+        List<Soba> lista = HibernateUtil.getSession().createQuery(
+            " from Soba a where a.obrisano=false").list();
+        for (Soba soba : lista) {
+            model.addElement(soba.getBrojSobe());
+        }
+        this.cmbBrojSobe.setModel(model);
+    }
+
+    private void napuniPaviljone() {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        String crveni = "crveni";
+        String plavi = "plavi";
+        model.addElement(crveni);
+        model.addElement(plavi);
+        this.cmbPaviljon.setModel(model);
+    }
+
+    private void napuniListuStudenta(Soba odabranaSoba) {
+        DefaultListModel<Student> model = new DefaultListModel<>();
+        List<Student> lista = HibernateUtil.getSession().createQuery(
+            " from Student a where a.obrisano=false and soba like :uvjet ")
+                .setString("uvjet", "%" + odabranaSoba.getSifra() + "%")
+                .list();
+        for (Student student : lista) {
+            model.addElement(student);
+        }
+        this.listaStudenta.setModel(model);
+    }
 }

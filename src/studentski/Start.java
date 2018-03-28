@@ -6,9 +6,6 @@
 package studentski;
 
 
-import studentski.controller.Obrada;
-import studentski.model.Student;
-import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
 import studentski.view.Izbornik;
 /**

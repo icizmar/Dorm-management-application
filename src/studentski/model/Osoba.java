@@ -19,6 +19,15 @@ public abstract class Osoba extends Entitet{
     private String prezime;
     private String email;
     private boolean spol;
+    
+    public Osoba(){
+        
+    }
+    
+    public Osoba(String ime, String prezime){
+        this.ime = ime;
+        this.prezime = prezime;
+    }
 
     public String getOib() {
         return oib;

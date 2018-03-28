@@ -28,13 +28,12 @@ public class Obrada<T extends Entitet> {
 
     //Create ili Update ili Delete jer imamo atribut delete
     public T save(T entitet) {
-        if(entitet.getSifra() == 0){
+        if (entitet.getSifra() == 0) {
             entitet.setDatumKreiranja(new Date());
-        }
-        if(entitet.getDatumBrisanja() == null){
+        } else if (entitet.getDatumBrisanja() == null) {
             entitet.setDatumPromjene(new Date());
         }
-        // ovdje dolaze podaci o operateru nakon što napravimo login
+//tu dođu podaci o operaterima nakon što napravimo login
         session.beginTransaction();
         session.saveOrUpdate(entitet);
         session.getTransaction().commit();
