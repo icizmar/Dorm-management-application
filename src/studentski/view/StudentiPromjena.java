@@ -8,6 +8,8 @@ package studentski.view;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import studentski.controller.Obrada;
 import studentski.controller.ObradaSoba;
 import studentski.controller.ObradaStudent;
 import studentski.model.Student;
@@ -18,18 +20,20 @@ import studentski.model.Student;
  */
 public class StudentiPromjena extends javax.swing.JFrame {
     
-    private ObradaStudent obrada;
+    private Obrada<Student> obrada;
     private String musko = "Muško";
     private String zensko = "Žensko";
+    private Student student;
     /**
      * Creates new form StudentiPromjena
      */
-    public StudentiPromjena(Student st) {
+    public StudentiPromjena(Student student) {
+        this.student = student;
         initComponents();Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
-        obrada = new ObradaStudent();
+        obrada = new Obrada<>();
         napuniSpolove();
-        napuniPolja(st);
+        napuniPolja(student);
     }
 
     /**
@@ -76,6 +80,11 @@ public class StudentiPromjena extends javax.swing.JFrame {
         jLabel6.setText("Spol:");
 
         btnPromjeni.setText("Promjeni");
+        btnPromjeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPromjeniActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,6 +156,31 @@ public class StudentiPromjena extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPrezimeActionPerformed
 
+    private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
+        Student st = new Student();
+        student.setIme(txtIme.getText());
+        student.setPrezime(txtPrezime.getText());
+        student.setOib(txtOib.getText());
+        student.setEmail(txtEmail.getText());
+        student.setBrojUgovora(txtBrojUgovora.getText());
+        if(cmbSpol.getSelectedIndex() == 0){
+            student.setSpol(false);
+        }else if(cmbSpol.getSelectedIndex() == 1){
+            student.setSpol(true);
+        }
+        if(txtIme.getText().trim().length()==0){
+            JOptionPane.showMessageDialog(getRootPane(), "Obavezno popunite ime!");
+            return;
+        }
+        if(txtPrezime.getText().trim().length()==0){
+            JOptionPane.showMessageDialog(getRootPane(), "Obavezno popunite prezime!");
+            return;
+        }
+        obrada.save(st);
+        JOptionPane.showMessageDialog(getRootPane(), "Promjena je izvršena");
+        dispose();
+    }//GEN-LAST:event_btnPromjeniActionPerformed
+
     private void napuniPolja(Student st) {
         String musko = "muško";
         String zensko = "žensko";
@@ -158,9 +192,9 @@ public class StudentiPromjena extends javax.swing.JFrame {
         txtPrezime.setText(st.getPrezime());
         txtEmail.setText(st.getEmail());
         if(!st.isSpol()){
-            cmbSpol.getItemAt(1);
+            cmbSpol.setSelectedIndex(0);
         }else if(st.isSpol()){
-            cmbSpol.getItemAt(0);
+            cmbSpol.setSelectedIndex(1);
         }
         txtBrojUgovora.setText(st.getBrojUgovora());
     }
@@ -190,8 +224,8 @@ public class StudentiPromjena extends javax.swing.JFrame {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         musko = "Muško";
         zensko = "Žensko";
-        model.addElement(musko);
         model.addElement(zensko);
+        model.addElement(musko);
         this.cmbSpol.setModel(model); 
     }
 }
