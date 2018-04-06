@@ -28,8 +28,9 @@ public class StudentiPromjena extends javax.swing.JFrame {
      * Creates new form StudentiPromjena
      */
     public StudentiPromjena(Student student) {
-        this.student = student;
-        initComponents();Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        initComponents();
+         this.student = student;
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         obrada = new Obrada<>();
         napuniSpolove();
@@ -157,7 +158,7 @@ public class StudentiPromjena extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPrezimeActionPerformed
 
     private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
-        Student st = new Student();
+        System.out.println(student.getSifra());
         student.setIme(txtIme.getText());
         student.setPrezime(txtPrezime.getText());
         student.setOib(txtOib.getText());
@@ -176,7 +177,7 @@ public class StudentiPromjena extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Obavezno popunite prezime!");
             return;
         }
-        obrada.save(st);
+        obrada.save(student);
         JOptionPane.showMessageDialog(getRootPane(), "Promjena je izvršena");
         dispose();
     }//GEN-LAST:event_btnPromjeniActionPerformed

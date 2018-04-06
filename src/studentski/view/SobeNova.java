@@ -183,7 +183,6 @@ public class SobeNova extends javax.swing.JFrame {
         try{
             soba.setBrojSobe(Integer.parseInt(txtBrojSobe.getText()));
         }catch(Exception e){
-            e.printStackTrace();
             soba.setBrojSobe(0);
             brojSobe = 1;
         }

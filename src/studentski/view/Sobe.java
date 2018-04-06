@@ -85,6 +85,7 @@ public class Sobe extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         btnObrisiSobu = new javax.swing.JButton();
         btnPromjeniSobu = new javax.swing.JButton();
+        btnPojedinostiSobe = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -158,6 +159,13 @@ public class Sobe extends javax.swing.JFrame {
 
         btnPromjeniSobu.setText("Promjeni sobu");
 
+        btnPojedinostiSobe.setText("Pojedinosti sobe");
+        btnPojedinostiSobe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPojedinostiSobeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -193,7 +201,8 @@ public class Sobe extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(119, 119, 119)
                                 .addComponent(cmbBrojSobe, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPojedinostiSobe, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnNovaSoba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -222,10 +231,15 @@ public class Sobe extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btnNovaSoba)
                         .addGap(12, 12, 12)))
-                .addGap(2, 2, 2)
-                .addComponent(btnPromjeniSobu)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnObrisiSobu)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(btnPromjeniSobu)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnObrisiSobu))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(btnPojedinostiSobe)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -252,8 +266,6 @@ public class Sobe extends javax.swing.JFrame {
 
     private void cmbBrojSobeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBrojSobeActionPerformed
         brojSobe = (Integer) cmbBrojSobe.getSelectedItem();
-        System.out.println(ANSI_BLUE + "Paviljon je: " + paviljon + ANSI_RESET);
-        System.out.println(ANSI_BLUE + "Broj sobe je: " + brojSobe + ANSI_RESET);
         List<Soba> listaSoba = HibernateUtil.getSession().createQuery(
                 " from Soba a where a.obrisano=false and paviljon like :uvjet1 and brojsobe like :uvjet2 ")
                 .setString("uvjet1", "%" + paviljon + "%")
@@ -262,6 +274,8 @@ public class Sobe extends javax.swing.JFrame {
         for (Soba soba : listaSoba) {
             odabranaSoba = soba;
         }
+        System.out.println(ANSI_BLUE + "Odabrana soba je: " 
+                + odabranaSoba.getPaviljon() + " " + odabranaSoba.getBrojSobe()+ ANSI_RESET);
         DefaultListModel<Student> model = new DefaultListModel<>();
         List<Student> lista = HibernateUtil.getSession().createQuery(
                 " from Student a where a.obrisano=false and soba like :uvjet ")
@@ -269,7 +283,7 @@ public class Sobe extends javax.swing.JFrame {
                 .list();
         for (Student student : lista) {
             model.addElement(student);
-            System.out.println(ANSI_BLUE + "Ime studenta je: " + student.getIme() + ANSI_RESET);
+            System.out.println(ANSI_BLUE + "Ime studenta je: " + student.getSifra()+ ANSI_RESET);
         }
         listaStudenta.setModel(model);
     }//GEN-LAST:event_cmbBrojSobeActionPerformed
@@ -299,7 +313,10 @@ public class Sobe extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "U sobi se već nalazi dva studenta");
             return;
         }
+        System.out.println(ANSI_BLUE + "Odabrana soba je: " 
+                + odabranaSoba.getPaviljon() + " " + odabranaSoba.getBrojSobe()+ ANSI_RESET);
         new StudentiNovi(odabranaSoba).setVisible(true);
+        System.out.println(ANSI_BLUE + "Vratio se poslje setvisible" + ANSI_RESET);
         //popuniListuStudenta();
     }//GEN-LAST:event_btnNoviStudentActionPerformed
 
@@ -309,6 +326,7 @@ public class Sobe extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Obavezno odaberite studenta!");
             return;
         }
+        System.out.println("1111 "+st.getSifra());
         new StudentiPromjena(st).setVisible(true);
     }//GEN-LAST:event_btnPromjeniStudentaActionPerformed
 
@@ -371,6 +389,14 @@ public class Sobe extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnObrisiSobuActionPerformed
 
+    private void btnPojedinostiSobeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPojedinostiSobeActionPerformed
+        if(odabranaSoba == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Prvo odaberite sobu");
+            return;
+        }
+        new PojedinostiSobe(odabranaSoba).setVisible(true);
+    }//GEN-LAST:event_btnPojedinostiSobeActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -380,6 +406,7 @@ public class Sobe extends javax.swing.JFrame {
     private javax.swing.JButton btnNoviStudent;
     private javax.swing.JButton btnObrisiSobu;
     private javax.swing.JButton btnObrisiStudenta;
+    private javax.swing.JButton btnPojedinostiSobe;
     private javax.swing.JButton btnPojedinostiStudenta;
     private javax.swing.JButton btnPromjeniSobu;
     private javax.swing.JButton btnPromjeniStudenta;
