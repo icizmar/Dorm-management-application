@@ -32,16 +32,18 @@
                           <Component id="jLabel4" alignment="0" pref="148" max="32767" attributes="0"/>
                           <Component id="btnPojedinostiStudenta" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel5" min="-2" pref="134" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="btnNoviStudent" alignment="0" max="32767" attributes="0"/>
                                   <Component id="btnPromjeniStudenta" alignment="0" max="32767" attributes="0"/>
                                   <Component id="btnObrisiStudenta" alignment="0" max="32767" attributes="0"/>
                               </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jLabel5" min="-2" pref="156" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -72,7 +74,6 @@
                           <Component id="btnNovaSoba" max="32767" attributes="0"/>
                           <Component id="jLabel7" max="32767" attributes="0"/>
                           <Component id="btnObrisiSobu" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnPromjeniSobu" alignment="1" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -84,10 +85,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -97,24 +98,15 @@
                           <Component id="cmbPaviljon" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cmbBrojSobe" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <Component id="btnPojedinostiSobe" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btnNovaSoba" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                      <Component id="btnPromjeniSobu" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                       <Component id="btnObrisiSobu" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Component id="btnPojedinostiSobe" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
@@ -243,7 +235,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnObrisiStudenta">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Obri&#x161;i"/>
+        <Property name="text" type="java.lang.String" value="Odjavi"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnObrisiStudentaActionPerformed"/>
@@ -269,11 +261,6 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnObrisiSobuActionPerformed"/>
       </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="btnPromjeniSobu">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Promjeni sobu"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnPojedinostiSobe">
       <Properties>

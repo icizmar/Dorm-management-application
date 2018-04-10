@@ -5,7 +5,10 @@
  */
 package studentski.pomocno;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import studentski.controller.Obrada;
 import studentski.model.Opomena;
 import studentski.model.Racun;
@@ -24,8 +27,10 @@ public class InicijalnoPunjenje {
     private Obrada<Student> obradaStudent;
     private Obrada<Racun> obradaRacun;
     private Obrada<Opomena> obradaOpomena;
+    private SimpleDateFormat format;
     
     public InicijalnoPunjenje() {
+        format = new SimpleDateFormat("yyyy-MM-dd");
         obradaStudentskiDom = new Obrada<>();
         obradaSoba = new Obrada<>();
         obradaStudent = new Obrada<>();
@@ -77,17 +82,17 @@ public class InicijalnoPunjenje {
         obradaStudent.save(student3);
         Racun racun1 = new Racun();
         Racun racun2 = new Racun();
-        racun1.setDatumIzdavanjaRacuna(new Date(2018, 3, 3));
         racun1.setPlacen(false);
         racun1.setCijena(500);
         racun1.setStudent(student1);
-        racun2.setDatumIzdavanjaRacuna(new Date(2018, 3, 4));
         racun2.setPlacen(false);
         racun2.setCijena(500);
         racun2.setStudent(student2);
+        //U tablicu unjeti sljedeća dva upita:
+        //update racun set datumIzdavanjaRacuna='2018-03-03' where sifra = 8;
+        //update racun set datumIzdavanjaRacuna='2018-04-03' where sifra = 9;
         obradaRacun.save(racun1);
         obradaRacun.save(racun2);
-        ////// Još mi je ostalo unjeti jednu opomenu koja nije riješena
     }
     
     public static void main(String[] args) {

@@ -179,7 +179,7 @@ public class StudentiNovi extends javax.swing.JFrame {
         }
         JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste novog studenta u sobu: "
                 + soba.getBrojSobe() + " " + soba.getPaviljon());
-        prozor.napuniSobeNakonUnosaNove();
+        prozor.napuniStudente();
         dispose();
     }//GEN-LAST:event_btnNoviActionPerformed
 

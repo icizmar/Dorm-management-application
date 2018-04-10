@@ -53,7 +53,11 @@ public class Sobe extends javax.swing.JFrame {
         obradaSoba = new Obrada<>();
         obradaStudent = new Obrada<>();
         cmbPaviljon.setSelectedIndex(0);
-        cmbBrojSobe.setSelectedIndex(0);
+        try{
+            cmbBrojSobe.setSelectedIndex(0);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(getRootPane(), "Nepostoje sobe u domu, unesite novu!");
+        }
     }
 
     /**
@@ -81,7 +85,6 @@ public class Sobe extends javax.swing.JFrame {
         btnNovaSoba = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         btnObrisiSobu = new javax.swing.JButton();
-        btnPromjeniSobu = new javax.swing.JButton();
         btnPojedinostiSobe = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -132,7 +135,7 @@ public class Sobe extends javax.swing.JFrame {
             }
         });
 
-        btnObrisiStudenta.setText("Obriši");
+        btnObrisiStudenta.setText("Odjavi");
         btnObrisiStudenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnObrisiStudentaActionPerformed(evt);
@@ -155,8 +158,6 @@ public class Sobe extends javax.swing.JFrame {
             }
         });
 
-        btnPromjeniSobu.setText("Promjeni sobu");
-
         btnPojedinostiSobe.setText("Pojedinosti sobe");
         btnPojedinostiSobe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,15 +177,16 @@ public class Sobe extends javax.swing.JFrame {
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
                             .addComponent(btnPojedinostiStudenta, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
+                                .addGap(43, 43, 43)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(btnNoviStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnPromjeniStudenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnObrisiStudenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                    .addComponent(btnObrisiStudenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -205,39 +207,32 @@ public class Sobe extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnNovaSoba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnObrisiSobu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnPromjeniSobu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(btnObrisiSobu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(jLabel1)
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(11, 11, 11)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cmbPaviljon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbBrojSobe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cmbBrojSobe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27)
+                        .addComponent(btnPojedinostiSobe))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
                         .addComponent(btnNovaSoba)
-                        .addGap(12, 12, 12)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(btnPromjeniSobu)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnObrisiSobu))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(btnPojedinostiSobe)))
+                        .addGap(26, 26, 26)
+                        .addComponent(btnObrisiSobu)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -291,7 +286,6 @@ public class Sobe extends javax.swing.JFrame {
             model.addElement(soba.getBrojSobe());
         }
         cmbBrojSobe.setModel(model);
-        
     }
     
     public void napuniStudente(){
@@ -342,10 +336,7 @@ public class Sobe extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "U sobi se već nalazi dva studenta");
             return;
         }
-        System.out.println(ANSI_BLUE + "Odabrana soba je: " 
-                + odabranaSoba.getPaviljon() + " " + odabranaSoba.getBrojSobe()+ ANSI_RESET);
         new StudentiNovi(odabranaSoba,this).setVisible(true);
-        System.out.println(ANSI_BLUE + "Vratio se poslje setvisible" + ANSI_RESET);
         //popuniListuStudenta();
     }//GEN-LAST:event_btnNoviStudentActionPerformed
 
@@ -371,11 +362,20 @@ public class Sobe extends javax.swing.JFrame {
         }
         for (Racun racun : odabraniStudent.getRacuni()) {
             if(!racun.isPlacen()){
-                JOptionPane.showMessageDialog(getRootPane(), "Student ima neplaćenih računa te ga se ne može obrisati");
+                JOptionPane.showMessageDialog(getRootPane(), "Student ima neplaćenih računa te se ne može odjaviti iz doma");
                 return;
             }
         }
-        obradaStudent.delete(odabraniStudent);
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog (getRootPane(), "Želite li odjaviti "
+                + "studenta: " + odabraniStudent +"?", "Upozorenje", dialogButton);
+        if(dialogResult == JOptionPane.YES_OPTION){
+            obradaStudent.delete(odabraniStudent);
+            JOptionPane.showMessageDialog(getRootPane(), "Odjavili ste studenta "
+            + odabraniStudent);
+        }else{
+            return;
+        }
         napuniStudente();
     }//GEN-LAST:event_btnObrisiStudentaActionPerformed
 
@@ -433,7 +433,6 @@ public class Sobe extends javax.swing.JFrame {
     private javax.swing.JButton btnObrisiStudenta;
     private javax.swing.JButton btnPojedinostiSobe;
     private javax.swing.JButton btnPojedinostiStudenta;
-    private javax.swing.JButton btnPromjeniSobu;
     private javax.swing.JButton btnPromjeniStudenta;
     private javax.swing.JComboBox<Integer> cmbBrojSobe;
     private javax.swing.JComboBox<String> cmbPaviljon;
@@ -447,28 +446,5 @@ public class Sobe extends javax.swing.JFrame {
     private javax.swing.JList<Student> listaStudenta;
     // End of variables declaration//GEN-END:variables
 
-    private void popuniListuStudenta() {
-        brojSobe = (Integer) cmbBrojSobe.getSelectedItem();
-        System.out.println(ANSI_BLUE + "Paviljon je: " + paviljon + ANSI_RESET);
-        System.out.println(ANSI_BLUE + "Broj sobe je: " + brojSobe + ANSI_RESET);
-        List<Soba> listaSoba = HibernateUtil.getSession().createQuery(
-                " from Soba a where a.obrisano=false and paviljon like :uvjet1 and brojsobe like :uvjet2 ")
-                .setString("uvjet1", "%" + paviljon + "%")
-                .setString("uvjet2", "%" + brojSobe + "%")
-                .list();
-        for (Soba soba : listaSoba) {
-            odabranaSoba = soba;
-        }
-        DefaultListModel<Student> model = new DefaultListModel<>();
-        List<Student> lista = HibernateUtil.getSession().createQuery(
-                " from Student a where a.obrisano=false and soba like :uvjet ")
-                .setString("uvjet", "%" + odabranaSoba.getSifra() + "%")
-                .list();
-        for (Student student : lista) {
-            model.addElement(student);
-            System.out.println(ANSI_BLUE + "Ime studenta je: " + student.getIme() + ANSI_RESET);
-        }
-        listaStudenta.setModel(model);
-    }
 
 }
