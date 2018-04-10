@@ -9,17 +9,15 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import studentski.controller.Obrada;
-import studentski.controller.ObradaSoba;
+import studentski.model.Racun;
 import studentski.model.Soba;
 import studentski.model.Student;
 import studentski.pomocno.HibernateUtil;
-import sun.awt.DefaultMouseInfoPeer;
 
 /**
  *
@@ -44,19 +42,18 @@ public class Sobe extends javax.swing.JFrame {
         initComponents();
         cmbPaviljon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
             }
         });
         cmbBrojSobe.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
             }
         });
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         obradaSoba = new Obrada<>();
         obradaStudent = new Obrada<>();
-        napuniPaviljone();
+        cmbPaviljon.setSelectedIndex(0);
+        cmbBrojSobe.setSelectedIndex(0);
     }
 
     /**
@@ -97,6 +94,7 @@ public class Sobe extends javax.swing.JFrame {
             }
         });
 
+        cmbPaviljon.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "crveni", "plavi" }));
         cmbPaviljon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbPaviljonActionPerformed(evt);
@@ -265,6 +263,38 @@ public class Sobe extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmbBrojSobeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBrojSobeActionPerformed
+       napuniStudente();
+    }//GEN-LAST:event_cmbBrojSobeActionPerformed
+    
+    public void napuniSobe() {
+        paviljon = (String) cmbPaviljon.getSelectedItem();
+        DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<>();
+        List<Soba> lista = HibernateUtil.getSession().createQuery(
+                " from Soba a where a.obrisano=false and paviljon like :uvjet")
+                .setString("uvjet", "%" + paviljon + "%")
+                .list();
+        for (Soba soba : lista) {
+            model.addElement(soba.getBrojSobe());
+        }
+        cmbBrojSobe.setModel(model);
+    }
+    
+    public void napuniSobeNakonUnosaNove(){
+        cmbPaviljon.setSelectedIndex(0);
+        paviljon = (String) cmbPaviljon.getSelectedItem();
+        DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<>();
+        List<Soba> lista = HibernateUtil.getSession().createQuery(
+                " from Soba a where a.obrisano=false and paviljon like :uvjet")
+                .setString("uvjet", "%" + paviljon + "%")
+                .list();
+        for (Soba soba : lista) {
+            model.addElement(soba.getBrojSobe());
+        }
+        cmbBrojSobe.setModel(model);
+        
+    }
+    
+    public void napuniStudente(){
         brojSobe = (Integer) cmbBrojSobe.getSelectedItem();
         List<Soba> listaSoba = HibernateUtil.getSession().createQuery(
                 " from Soba a where a.obrisano=false and paviljon like :uvjet1 and brojsobe like :uvjet2 ")
@@ -286,8 +316,7 @@ public class Sobe extends javax.swing.JFrame {
             System.out.println(ANSI_BLUE + "Ime studenta je: " + student.getSifra()+ ANSI_RESET);
         }
         listaStudenta.setModel(model);
-    }//GEN-LAST:event_cmbBrojSobeActionPerformed
-
+    }
 
     private void btnPojedinostiStudentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPojedinostiStudentaActionPerformed
         pojedinostiStudenta = new Student();
@@ -315,7 +344,7 @@ public class Sobe extends javax.swing.JFrame {
         }
         System.out.println(ANSI_BLUE + "Odabrana soba je: " 
                 + odabranaSoba.getPaviljon() + " " + odabranaSoba.getBrojSobe()+ ANSI_RESET);
-        new StudentiNovi(odabranaSoba).setVisible(true);
+        new StudentiNovi(odabranaSoba,this).setVisible(true);
         System.out.println(ANSI_BLUE + "Vratio se poslje setvisible" + ANSI_RESET);
         //popuniListuStudenta();
     }//GEN-LAST:event_btnNoviStudentActionPerformed
@@ -327,20 +356,11 @@ public class Sobe extends javax.swing.JFrame {
             return;
         }
         System.out.println("1111 "+st.getSifra());
-        new StudentiPromjena(st).setVisible(true);
+        new StudentiPromjena(st, this).setVisible(true);
     }//GEN-LAST:event_btnPromjeniStudentaActionPerformed
 
     private void cmbPaviljonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPaviljonActionPerformed
-        paviljon = (String) cmbPaviljon.getSelectedItem();
-        DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<>();
-        List<Soba> lista = HibernateUtil.getSession().createQuery(
-                " from Soba a where a.obrisano=false and paviljon like :uvjet")
-                .setString("uvjet", "%" + paviljon + "%")
-                .list();
-        for (Soba soba : lista) {
-            model.addElement(soba.getBrojSobe());
-        }
-        cmbBrojSobe.setModel(model);
+        napuniSobe();
     }//GEN-LAST:event_cmbPaviljonActionPerformed
 
     private void btnObrisiStudentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiStudentaActionPerformed
@@ -349,13 +369,18 @@ public class Sobe extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Odaberite studenta kojeg želite obrisati");
             return;
         }
+        for (Racun racun : odabraniStudent.getRacuni()) {
+            if(!racun.isPlacen()){
+                JOptionPane.showMessageDialog(getRootPane(), "Student ima neplaćenih računa te ga se ne može obrisati");
+                return;
+            }
+        }
         obradaStudent.delete(odabraniStudent);
-        //popuniListuStudenta();
-        
+        napuniStudente();
     }//GEN-LAST:event_btnObrisiStudentaActionPerformed
 
     private void btnNovaSobaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovaSobaActionPerformed
-        new SobeNova().setVisible(true);
+        new SobeNova(this).setVisible(true);
     }//GEN-LAST:event_btnNovaSobaActionPerformed
 
     private void btnObrisiSobuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiSobuActionPerformed
@@ -386,7 +411,7 @@ public class Sobe extends javax.swing.JFrame {
         }else{
             return;
         }
-        
+        napuniSobe();
     }//GEN-LAST:event_btnObrisiSobuActionPerformed
 
     private void btnPojedinostiSobeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPojedinostiSobeActionPerformed
@@ -421,15 +446,6 @@ public class Sobe extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<Student> listaStudenta;
     // End of variables declaration//GEN-END:variables
-
-    private void napuniPaviljone() {
-        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-        String crveni = "crveni";
-        String plavi = "plavi";
-        model.addElement(crveni);
-        model.addElement(plavi);
-        this.cmbPaviljon.setModel(model);
-    }
 
     private void popuniListuStudenta() {
         brojSobe = (Integer) cmbBrojSobe.getSelectedItem();

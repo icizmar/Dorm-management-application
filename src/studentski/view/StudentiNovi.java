@@ -24,13 +24,15 @@ public class StudentiNovi extends javax.swing.JFrame {
     private String musko = "Muško";
     private String zensko = "Žensko";
     private Soba soba;
+    private Sobe prozor;
 
     /**
      * Creates new form StudentiNovi
      */
-    public StudentiNovi(Soba soba) {
+    public StudentiNovi(Soba soba, Sobe prozor) {
         initComponents();
         this.soba = soba;
+        this.prozor=prozor;
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         obrada = new ObradaStudent();
@@ -177,6 +179,7 @@ public class StudentiNovi extends javax.swing.JFrame {
         }
         JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste novog studenta u sobu: "
                 + soba.getBrojSobe() + " " + soba.getPaviljon());
+        prozor.napuniSobeNakonUnosaNove();
         dispose();
     }//GEN-LAST:event_btnNoviActionPerformed
 

@@ -20,6 +20,7 @@ import javax.persistence.Table;
 public class Opomena extends Entitet implements Serializable{
     
     private Date izdavanjeOpomene;
+    private Date datumUplateOpomene;
     private boolean placenoNakonOpomene;
     @ManyToOne
     private Racun racun;
@@ -32,6 +33,14 @@ public class Opomena extends Entitet implements Serializable{
         this.placenoNakonOpomene = placenoNakonOpomene;
     }
 
+    public Date getDatumUplateOpomene() {
+        return datumUplateOpomene;
+    }
+
+    public void setDatumUplateOpomene(Date datumUplateOpomene) {
+        this.datumUplateOpomene = datumUplateOpomene;
+    }
+    
     public Racun getRacun() {
         return racun;
     }

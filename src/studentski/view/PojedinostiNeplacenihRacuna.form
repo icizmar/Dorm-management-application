@@ -26,18 +26,22 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jLabel1" min="-2" pref="100" max="-2" attributes="0"/>
-                      <Component id="txtDatumIzdavanja" max="32767" attributes="0"/>
-                      <Component id="jLabel2" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
-                      <Component id="cmbPlacen" alignment="0" min="-2" pref="58" max="-2" attributes="0"/>
-                      <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtIznos" alignment="0" pref="191" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jLabel1" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="txtDatumIzdavanja" max="32767" attributes="0"/>
+                          <Component id="jLabel2" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
+                          <Component id="cmbPlacen" alignment="0" min="-2" pref="58" max="-2" attributes="0"/>
+                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtIznos" alignment="0" pref="191" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="txtDatumUplate" alignment="0" min="-2" pref="191" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="31" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -59,7 +63,10 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="txtIznos" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtIznos" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace pref="50" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -97,6 +104,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtIznos">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
@@ -104,6 +114,11 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtDatumUplate">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="KN"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

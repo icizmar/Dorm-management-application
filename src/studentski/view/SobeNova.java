@@ -26,12 +26,14 @@ public class SobeNova extends javax.swing.JFrame {
     private Obrada<Soba> obrada;
     private StudentskiDom studentskiDom;
     private Integer brojSobe;
+    private Sobe prozor;
 
     /**
      * Creates new form SobeNova
      */
-    public SobeNova() {
+    public SobeNova(Sobe prozor) {
         initComponents();
+        this.prozor=prozor;
         cmbStudentskiDomovi.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             }
@@ -152,6 +154,7 @@ public class SobeNova extends javax.swing.JFrame {
         }
         obrada.save(soba);
         JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste novu sobu!");
+        prozor.napuniSobe();
         dispose();
     }//GEN-LAST:event_btnDodajNoviDomActionPerformed
 
@@ -224,10 +227,4 @@ public class SobeNova extends javax.swing.JFrame {
         }
         else return true;
     }
-
-    private boolean provjeraIntegera() {
-        
-        return true;
-    }
-
 }

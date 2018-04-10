@@ -165,7 +165,10 @@
     <Component class="javax.swing.JComboBox" name="cmbPaviljon">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="0"/>
+          <StringArray count="2">
+            <StringItem index="0" value="crveni"/>
+            <StringItem index="1" value="plavi"/>
+          </StringArray>
         </Property>
       </Properties>
       <Events>

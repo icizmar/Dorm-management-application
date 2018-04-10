@@ -16,11 +16,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import studentski.controller.Obrada;
+import studentski.model.Opomena;
 import studentski.model.Racun;
 import studentski.model.Student;
 import studentski.pomocno.HibernateUtil;
@@ -37,9 +36,10 @@ public class Racuni extends javax.swing.JFrame {
     private SimpleDateFormat format;
     private Date pMjeseca;
     private Date kMjeseca;
-    private List<Student> listaStudentaSRacunom;
+    private List<Student> listaStudentaSNeplacenimRacunom;
     private List<Student> listaStudentaBezRacuna;
     private Obrada<Racun> obrada;
+    private List<Student> listaStudentaSPlacenim;
     
     
     /**
@@ -54,6 +54,7 @@ public class Racuni extends javax.swing.JFrame {
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         format = new SimpleDateFormat("yyyy-MM-dd");
         obrada = new Obrada<>();
+        provjeraOpomene();
     }
 
     /**
@@ -75,11 +76,13 @@ public class Racuni extends javax.swing.JFrame {
         cmbMjesec = new javax.swing.JComboBox<>();
         btnIzdajRacune = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        btnPojedinostiRacuna = new javax.swing.JButton();
+        btnPojedinostNeplacenihiRacuna = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        listaStudentaSPlacenimRacunom = new javax.swing.JList<>();
+        listaPlacenih = new javax.swing.JList<>();
         jLabel4 = new javax.swing.JLabel();
         btnUplataIzvrsena = new javax.swing.JButton();
+        btnPojedinostiPlacenihRacuna = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -107,14 +110,14 @@ public class Racuni extends javax.swing.JFrame {
 
         jLabel3.setText("Odaberi mjesec:");
 
-        btnPojedinostiRacuna.setText("Pojedinosti računa");
-        btnPojedinostiRacuna.addActionListener(new java.awt.event.ActionListener() {
+        btnPojedinostNeplacenihiRacuna.setText("Pojedinosti računa");
+        btnPojedinostNeplacenihiRacuna.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPojedinostiRacunaActionPerformed(evt);
+                btnPojedinostNeplacenihiRacunaActionPerformed(evt);
             }
         });
 
-        jScrollPane3.setViewportView(listaStudentaSPlacenimRacunom);
+        jScrollPane3.setViewportView(listaPlacenih);
 
         jLabel4.setText("Studenti s plaćenim računom:");
 
@@ -124,6 +127,15 @@ public class Racuni extends javax.swing.JFrame {
                 btnUplataIzvrsenaActionPerformed(evt);
             }
         });
+
+        btnPojedinostiPlacenihRacuna.setText("Pojedinosti računa");
+        btnPojedinostiPlacenihRacuna.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPojedinostiPlacenihRacunaActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("jLabel5");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -137,20 +149,24 @@ public class Racuni extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnIzdajRacune))
+                            .addComponent(btnIzdajRacune)
+                            .addComponent(cmbMjesec, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(26, 26, 26)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnPojedinostiRacuna)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnUplataIzvrsena)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                    .addComponent(btnPojedinostNeplacenihiRacuna))
                                 .addGap(27, 27, 27)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(btnUplataIzvrsena)))
-                    .addComponent(cmbMjesec, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnPojedinostiPlacenihRacuna)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(48, 48, 48))
         );
         layout.setVerticalGroup(
@@ -159,7 +175,9 @@ public class Racuni extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addGap(23, 23, 23)
-                .addComponent(cmbMjesec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbMjesec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -177,7 +195,9 @@ public class Racuni extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(btnPojedinostiRacuna)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnPojedinostNeplacenihiRacuna)
+                            .addComponent(btnPojedinostiPlacenihRacuna))))
                 .addGap(18, 18, 18)
                 .addComponent(btnUplataIzvrsena)
                 .addContainerGap(16, Short.MAX_VALUE))
@@ -187,7 +207,7 @@ public class Racuni extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmbMjesecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbMjesecActionPerformed
-        odabirDatuma();
+        odabirDatuma(); 
         if(pMjeseca == null || kMjeseca == null){
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali mjesec za pregled računa");
             return;
@@ -223,8 +243,13 @@ public class Racuni extends javax.swing.JFrame {
         popuniListeStudenata();
     }//GEN-LAST:event_btnIzdajRacuneActionPerformed
 
-    private void btnPojedinostiRacunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPojedinostiRacunaActionPerformed
-        if(listaStudentaSRacunom.isEmpty()){
+    private void btnPojedinostNeplacenihiRacunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPojedinostNeplacenihiRacunaActionPerformed
+        Student student = listaS.getSelectedValue();
+        if (student == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali sudenta za pregled racuna");
+            return;
+        }
+        if(listaStudentaSNeplacenimRacunom.isEmpty()){
             JOptionPane.showMessageDialog(getRootPane(), "Nema studenata s izdanim računom!");
             return;
         }
@@ -232,9 +257,55 @@ public class Racuni extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali mjesec za pregled računa");
             return;
         }
+        Racun r = new Racun();
+        List<Racun> listaRacuna = HibernateUtil.getSession().createQuery(
+                "FROM Racun a WHERE a.obrisano=false and student like :uvjet and a.datumIzdavanjaRacuna BETWEEN :stDate AND :edDate ")
+                .setString("uvjet", "%" + student.getSifra() + "%")
+                .setParameter("stDate", pMjeseca)
+                .setParameter("edDate", kMjeseca)
+                .list();
+        for (Racun racun : listaRacuna) {
+            r = racun;
+        }
+        new PojedinostiNeplacenihRacuna(r).setVisible(true);
+    }//GEN-LAST:event_btnPojedinostNeplacenihiRacunaActionPerformed
+
+    private void btnUplataIzvrsenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUplataIzvrsenaActionPerformed
         Student student = listaS.getSelectedValue();
+        if(student == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali studenta koji je izvršio uplatu računa");
+            return;
+        }
+        List<Racun> listaRacuna = HibernateUtil.getSession().createQuery(
+                "FROM Racun a WHERE a.obrisano=false and student like :uvjet and a.datumIzdavanjaRacuna BETWEEN :stDate AND :edDate ")
+                .setString("uvjet", "%" + student.getSifra() + "%")
+                .setParameter("stDate", pMjeseca)
+                .setParameter("edDate", kMjeseca)
+                .list();
+        for (Racun racun : listaRacuna) {
+            racun.setPlacen(true);
+            racun.setDatumUplateRacuna(new Date());
+            racun.setCijena(500);
+            obrada.save(racun);
+        }
+        JOptionPane.showMessageDialog(getRootPane(), "Student " + student + " platio je račun za " + odabraniMjesec);
+        DefaultListModel<Student> model = new DefaultListModel<>();
+        model.addElement(student);
+        popuniListeStudenata();
+    }//GEN-LAST:event_btnUplataIzvrsenaActionPerformed
+
+    private void btnPojedinostiPlacenihRacunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPojedinostiPlacenihRacunaActionPerformed
+        Student student = listaPlacenih.getSelectedValue();
         if (student == null){
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali sudenta za pregled racuna");
+            return;
+        }
+        if(listaStudentaSPlacenim.isEmpty()){
+            JOptionPane.showMessageDialog(getRootPane(), "Nema studenata koji su platili račun za " + odabraniMjesec);
+            return;
+        }
+        if(pMjeseca == null || kMjeseca == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali mjesec za pregled računa");
             return;
         }
         Racun r = new Racun();
@@ -247,28 +318,8 @@ public class Racuni extends javax.swing.JFrame {
         for (Racun racun : listaRacuna) {
             r = racun;
         }
-        new PojedinostiRacuna(r).setVisible(true);
-    }//GEN-LAST:event_btnPojedinostiRacunaActionPerformed
-
-    private void btnUplataIzvrsenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUplataIzvrsenaActionPerformed
-        Student student = listaS.getSelectedValue();
-        List<Racun> listaRacuna = HibernateUtil.getSession().createQuery(
-                "FROM Racun a WHERE a.obrisano=false and student like :uvjet and a.datumIzdavanjaRacuna BETWEEN :stDate AND :edDate ")
-                .setString("uvjet", "%" + student.getSifra() + "%")
-                .setParameter("stDate", pMjeseca)
-                .setParameter("edDate", kMjeseca)
-                .list();
-        Racun r = new Racun();
-        for (Racun racun : listaRacuna) {
-            r = racun;
-            r.setPlacen(true);
-            r.setDatumUplateRacuna(new Date());
-        }
-        JOptionPane.showMessageDialog(getRootPane(), "Student " + student + " platio je račun za " + odabraniMjesec);
-        DefaultListModel<Student> model = new DefaultListModel<>();
-        model.addElement(student);
-        listaStudentaSPlacenimRacunom.setModel(model);
-    }//GEN-LAST:event_btnUplataIzvrsenaActionPerformed
+        new PojedinostiPlacenihRacuna(r).setVisible(true);
+    }//GEN-LAST:event_btnPojedinostiPlacenihRacunaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -277,45 +328,26 @@ public class Racuni extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIzdajRacune;
-    private javax.swing.JButton btnPojedinostiRacuna;
+    private javax.swing.JButton btnPojedinostNeplacenihiRacuna;
+    private javax.swing.JButton btnPojedinostiPlacenihRacuna;
     private javax.swing.JButton btnUplataIzvrsena;
     private javax.swing.JComboBox<String> cmbMjesec;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<Student> listaBez;
+    private javax.swing.JList<Student> listaPlacenih;
     private javax.swing.JList<Student> listaS;
-    private javax.swing.JList<Student> listaStudentaSPlacenimRacunom;
     // End of variables declaration//GEN-END:variables
 
     public static boolean isDateInBetweenIncludingEndPoints(final Date min, final Date max, final Date date){
         return !(date.before(min) || date.after(max));
     }
-    /*private void popuniListuSRacunima() {
-        DefaultListModel<Student> model = new DefaultListModel<>();
-        List<Student> lista = HibernateUtil.getSession().createQuery(
-            "SELECT a FROM Student a where a.obrisano=false and a.racuni IS NOT EMPTY ")
-                .list();
-        for (Student student : lista) {
-            model.addElement(student);
-        }
-        this.listaS.setModel(model);
-    }
-
-    private void popuniListuBezRacuna() {
-        DefaultListModel<Student> model = new DefaultListModel<>();
-        List<Student> lista = HibernateUtil.getSession().createQuery(
-            "SELECT a FROM Student a where a.obrisano=false and a.racuni IS EMPTY ")
-                .list();
-        for (Student student : lista) {
-            model.addElement(student);
-        }
-        this.listaBez.setModel(model);
-    }*/
 
     private void odabirDatuma() {
         GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
@@ -341,19 +373,31 @@ public class Racuni extends javax.swing.JFrame {
     private void popuniListeStudenata() {
         DefaultListModel<Student> model1 = new DefaultListModel<>();
         DefaultListModel<Student> model2 = new DefaultListModel<>();
+        DefaultListModel<Student> model3 = new DefaultListModel<>();
+        listaStudentaSPlacenim = new ArrayList<>();
         List<Racun> listaRacuna = HibernateUtil.getSession().createQuery(
                 "FROM Racun a WHERE a.obrisano=false and a.datumIzdavanjaRacuna BETWEEN :stDate AND :edDate ")
                 .setParameter("stDate", pMjeseca)
                 .setParameter("edDate", kMjeseca)
                 .list();
-        listaStudentaBezRacuna = HibernateUtil.getSession().createQuery(
-                "FROM Student a WHERE a.obrisano=false").list();
-        listaStudentaSRacunom = new ArrayList<>();
-        for (Racun racun : listaRacuna) {
-            listaStudentaSRacunom.add(racun.getStudent());
+        listaStudentaBezRacuna = HibernateUtil.getSession().createQuery("FROM Student a WHERE a.obrisano=false").list();
+        listaStudentaSNeplacenimRacunom = new ArrayList<>();
+        List<Racun> listaPlacenihRacuna = HibernateUtil.getSession().createQuery(
+                "FROM Racun a WHERE a.obrisano=false AND a.datumIzdavanjaRacuna BETWEEN :stDate AND :edDate "
+                        + " AND a.datumUplateRacuna is not null ")
+                        .setParameter("stDate", pMjeseca)
+                        .setParameter("edDate", kMjeseca)
+                        .list();
+        for (Racun racun : listaPlacenihRacuna) {
+            listaStudentaSPlacenim.add(racun.getStudent());
+            model3.addElement(racun.getStudent());
         }
-        listaStudentaBezRacuna.removeAll(listaStudentaSRacunom);
-        for (Student student : listaStudentaSRacunom) {
+        for (Racun racun : listaRacuna) {
+            listaStudentaSNeplacenimRacunom.add(racun.getStudent());
+        }
+        listaStudentaBezRacuna.removeAll(listaStudentaSNeplacenimRacunom);
+        listaStudentaSNeplacenimRacunom.removeAll(listaStudentaSPlacenim);
+        for (Student student : listaStudentaSNeplacenimRacunom) {
             if(student.isObrisano()){
                 continue;
             }
@@ -364,6 +408,17 @@ public class Racuni extends javax.swing.JFrame {
         }
         this.listaS.setModel(model1);
         this.listaBez.setModel(model2);
+        this.listaPlacenih.setModel(model3);
+    }
+
+    private void provjeraOpomene() {
+        List<Opomena> listaOpomena = HibernateUtil.getSession().createQuery(
+                "FROM Opomena a WHERE a.obrisano=false AND a.placenoNakonOpomene=false").list();
+        if(listaOpomena.isEmpty()){
+            jLabel5.setText("");
+        }else{
+            jLabel5.setText("Postoje studenti koji imaju opomenu koju nisu podmirili!");
+        }
     }
     
 }

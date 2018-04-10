@@ -24,6 +24,7 @@ public class Racun extends Entitet implements Serializable{
     private Date datumIzdavanjaRacuna;
     private Date datumUplateRacuna;
     private boolean placen;
+    private Integer cijena;
     @ManyToOne
     private Student student;
     @OneToMany(mappedBy = "racun")
@@ -67,6 +68,14 @@ public class Racun extends Entitet implements Serializable{
 
     public void setDatumUplateRacuna(Date datumUplateRacuna) {
         this.datumUplateRacuna = datumUplateRacuna;
+    }
+    
+    public Integer getCijena() {
+        return cijena;
+    }
+
+    public void setCijena(Integer cijena) {
+        this.cijena = cijena;
     }
     
 }
