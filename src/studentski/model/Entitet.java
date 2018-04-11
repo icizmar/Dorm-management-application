@@ -24,12 +24,7 @@ public abstract class Entitet {
     private Date datumPromjene;
     private Date datumBrisanja;
     private boolean obrisano = false;
-    @ManyToOne
-    private Operater operatorKreiranja;
-    @ManyToOne
-    private Operater operatorPromjene;
-    @ManyToOne
-    private Operater operatorBrisanja;
+   
 
     public int getSifra() {
         return sifra;
@@ -70,31 +65,4 @@ public abstract class Entitet {
     public void setObrisano(boolean obrisano) {
         this.obrisano = obrisano;
     }
-
-    public Operater getOperatorKreiranja() {
-        return operatorKreiranja;
-    }
-
-    public void setOperatorKreiranja(Operater operatorKreiranja) {
-        this.operatorKreiranja = operatorKreiranja;
-    }
-
-    public Operater getOperatorPromjene() {
-        return operatorPromjene;
-    }
-
-    public void setOperatorPromjene(Operater operatorPromjene) {
-        this.operatorPromjene = operatorPromjene;
-    }
-
-    public Operater getOperatorBrisanja() {
-        return operatorBrisanja;
-    }
-
-    public void setOperatorBrisanja(Operater operatorBrisanja) {
-        this.operatorBrisanja = operatorBrisanja;
-    }
-    
-    
-    
 }

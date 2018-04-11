@@ -34,7 +34,6 @@
     <property name="current_session_context_class">thread</property>
 
     <!-- moraju se slijedno navesti klase koje su mapirane -->
-    <mapping class="studentski.model.Operater" />
     <mapping class="studentski.model.StudentskiDom" />
     <mapping class="studentski.model.Soba" />
     <mapping class="studentski.model.Student" />

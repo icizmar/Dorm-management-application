@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import org.hibernate.Session;
 import studentski.controller.Obrada;
 import studentski.model.Racun;
 import studentski.model.Soba;
@@ -290,7 +291,9 @@ public class Sobe extends javax.swing.JFrame {
     
     public void napuniStudente(){
         brojSobe = (Integer) cmbBrojSobe.getSelectedItem();
-        List<Soba> listaSoba = HibernateUtil.getSession().createQuery(
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        List<Soba> listaSoba = s.createQuery(
                 " from Soba a where a.obrisano=false and paviljon like :uvjet1 and brojsobe like :uvjet2 ")
                 .setString("uvjet1", "%" + paviljon + "%")
                 .setString("uvjet2", "%" + brojSobe + "%")
@@ -298,8 +301,6 @@ public class Sobe extends javax.swing.JFrame {
         for (Soba soba : listaSoba) {
             odabranaSoba = soba;
         }
-        System.out.println(ANSI_BLUE + "Odabrana soba je: " 
-                + odabranaSoba.getPaviljon() + " " + odabranaSoba.getBrojSobe()+ ANSI_RESET);
         DefaultListModel<Student> model = new DefaultListModel<>();
         List<Student> lista = HibernateUtil.getSession().createQuery(
                 " from Student a where a.obrisano=false and soba like :uvjet ")

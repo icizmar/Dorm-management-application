@@ -20,7 +20,6 @@ public class Start {
     public static void main(String[] args) {
         HibernateUtil.getSession();
         new Izbornik().setVisible(true);
-        
     }
     
 }

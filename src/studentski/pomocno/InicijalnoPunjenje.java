@@ -5,12 +5,7 @@
  */
 package studentski.pomocno;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.swing.JOptionPane;
 import studentski.controller.Obrada;
-import studentski.model.Opomena;
 import studentski.model.Racun;
 import studentski.model.Soba;
 import studentski.model.Student;
@@ -26,21 +21,20 @@ public class InicijalnoPunjenje {
     private Obrada<Soba> obradaSoba;
     private Obrada<Student> obradaStudent;
     private Obrada<Racun> obradaRacun;
-    private Obrada<Opomena> obradaOpomena;
-    private SimpleDateFormat format;
     
     public InicijalnoPunjenje() {
-        format = new SimpleDateFormat("yyyy-MM-dd");
         obradaStudentskiDom = new Obrada<>();
         obradaSoba = new Obrada<>();
         obradaStudent = new Obrada<>();
         obradaRacun = new Obrada<>();
-        obradaOpomena = new Obrada<>();
         StudentskiDom dom = new StudentskiDom();
         dom.setNaziv("Novi studentski dom");
         dom.setAdresa("Kralja Petra Svačića");
         dom.setBrojTelefona("031/234-567");
-        obradaStudentskiDom.save(dom);
+        try {
+            obradaStudentskiDom.save(dom);
+        } catch (Exception e) {
+        }
         Soba soba1 = new Soba();
         Soba soba2 = new Soba();
         Soba soba3 = new Soba();
@@ -56,9 +50,12 @@ public class InicijalnoPunjenje {
         soba1.setStudentskiDom(dom);
         soba2.setStudentskiDom(dom);
         soba3.setStudentskiDom(dom);
-        obradaSoba.save(soba1);
-        obradaSoba.save(soba2);
-        obradaSoba.save(soba3);
+        try{
+            obradaSoba.save(soba1);
+            obradaSoba.save(soba2);
+            obradaSoba.save(soba3);
+        } catch (Exception e) {
+        }
         Student student1 = new Student();
         Student student2 = new Student();
         Student student3 = new Student();
@@ -77,9 +74,14 @@ public class InicijalnoPunjenje {
         student1.setSoba(soba1);
         student2.setSoba(soba1);
         student3.setSoba(soba3);
-        obradaStudent.save(student1);
-        obradaStudent.save(student2);
-        obradaStudent.save(student3);
+        try{
+            obradaStudent.save(student1);
+            obradaStudent.save(student2);
+            obradaStudent.save(student3); 
+        } catch (Exception e){
+            
+        }
+        
         Racun racun1 = new Racun();
         Racun racun2 = new Racun();
         racun1.setPlacen(false);
@@ -90,9 +92,13 @@ public class InicijalnoPunjenje {
         racun2.setStudent(student2);
         //U tablicu unjeti sljedeća dva upita:
         //update racun set datumIzdavanjaRacuna='2018-03-03' where sifra = 8;
-        //update racun set datumIzdavanjaRacuna='2018-04-03' where sifra = 9;
-        obradaRacun.save(racun1);
-        obradaRacun.save(racun2);
+        //update racun set datumIzdavanjaRacuna='2018-03-03' where sifra = 9;
+        try{
+            obradaRacun.save(racun1);
+            obradaRacun.save(racun2);
+        } catch (Exception e){
+            
+        }
     }
     
     public static void main(String[] args) {

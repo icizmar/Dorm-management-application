@@ -40,6 +40,10 @@ public class Racuni extends javax.swing.JFrame {
     private List<Student> listaStudentaBezRacuna;
     private Obrada<Racun> obrada;
     private List<Student> listaStudentaSPlacenim;
+    private Date prijasnjiMjesecPocetak;
+    private Date prijasnjiMjesecKraj;
+    private Date pocetakPijasnjeg;
+    private Date krajPrijasnjeg;
     
     
     /**
@@ -54,7 +58,6 @@ public class Racuni extends javax.swing.JFrame {
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         format = new SimpleDateFormat("yyyy-MM-dd");
         obrada = new Obrada<>();
-        provjeraOpomene();
     }
 
     /**
@@ -82,7 +85,6 @@ public class Racuni extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         btnUplataIzvrsena = new javax.swing.JButton();
         btnPojedinostiPlacenihRacuna = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -135,8 +137,6 @@ public class Racuni extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setText("jLabel5");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -144,29 +144,24 @@ public class Racuni extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnIzdajRacune)
-                            .addComponent(cmbMjesec, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnUplataIzvrsena)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                                    .addComponent(btnPojedinostNeplacenihiRacuna))
-                                .addGap(27, 27, 27)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnPojedinostiPlacenihRacuna)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jLabel2)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                            .addComponent(cmbMjesec, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnIzdajRacune, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnUplataIzvrsena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(btnPojedinostNeplacenihiRacuna, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btnPojedinostiPlacenihRacuna, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(48, 48, 48))
         );
         layout.setVerticalGroup(
@@ -174,10 +169,8 @@ public class Racuni extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbMjesec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
+                .addGap(22, 22, 22)
+                .addComponent(cmbMjesec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -200,7 +193,7 @@ public class Racuni extends javax.swing.JFrame {
                             .addComponent(btnPojedinostiPlacenihRacuna))))
                 .addGap(18, 18, 18)
                 .addComponent(btnUplataIzvrsena)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -267,11 +260,18 @@ public class Racuni extends javax.swing.JFrame {
         for (Racun racun : listaRacuna) {
             r = racun;
         }
-        new PojedinostiNeplacenihRacuna(r).setVisible(true);
+        new PojedinostiRacuna(r).setVisible(true);
     }//GEN-LAST:event_btnPojedinostNeplacenihiRacunaActionPerformed
 
     private void btnUplataIzvrsenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUplataIzvrsenaActionPerformed
+        Date trenutniDatum = new Date();
         Student student = listaS.getSelectedValue();
+        boolean provjeraDatuma = isDateInBetweenIncludingEndPoints(pocetakMjeseca, krajMjeseca, trenutniDatum);
+        if(!provjeraDatuma){
+            JOptionPane.showMessageDialog(getRootPane(), "Odabrani mjesec nije trenutni mjesec "
+                    + "te se za njega ne mogu izdati računi");
+            return;
+        }
         if(student == null){
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali studenta koji je izvršio uplatu računa");
             return;
@@ -318,7 +318,7 @@ public class Racuni extends javax.swing.JFrame {
         for (Racun racun : listaRacuna) {
             r = racun;
         }
-        new PojedinostiPlacenihRacuna(r).setVisible(true);
+        new PojedinostiRacuna(r).setVisible(true);
     }//GEN-LAST:event_btnPojedinostiPlacenihRacunaActionPerformed
 
     /**
@@ -336,7 +336,6 @@ public class Racuni extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -409,16 +408,5 @@ public class Racuni extends javax.swing.JFrame {
         this.listaS.setModel(model1);
         this.listaBez.setModel(model2);
         this.listaPlacenih.setModel(model3);
-    }
-
-    private void provjeraOpomene() {
-        List<Opomena> listaOpomena = HibernateUtil.getSession().createQuery(
-                "FROM Opomena a WHERE a.obrisano=false AND a.placenoNakonOpomene=false").list();
-        if(listaOpomena.isEmpty()){
-            jLabel5.setText("");
-        }else{
-            jLabel5.setText("Postoje studenti koji imaju opomenu koju nisu podmirili!");
-        }
-    }
-    
+    }   
 }

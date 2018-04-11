@@ -6,6 +6,7 @@
 package studentski.controller;
 
 import java.util.List;
+import org.hibernate.Session;
 import studentski.model.Student;
 import studentski.pomocno.HibernateUtil;
 
@@ -22,7 +23,9 @@ public class ObradaStudent {
     }
     
     public List<Student> getStudenti(String uvjet){
-        return HibernateUtil.getSession().createQuery(
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        return s.createQuery(
                 " from Student a where a.obrisano=false "
                         + " and concat(a.ime,' ',a.prezime) like :uvjet ")
                 .setString("uvjet", "%" + uvjet + "%")

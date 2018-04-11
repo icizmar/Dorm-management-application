@@ -148,20 +148,21 @@ public class Opomene extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(btnPojedinostiRacuna, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
                                 .addGap(31, 31, 31)
-                                .addComponent(btnNapraviOpomenu))
-                            .addComponent(btnPojedinostiRacuna)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                                .addComponent(btnNapraviOpomenu)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnOpomenaPlacena, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                             .addComponent(btnPojedinostiOpomene, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(58, Short.MAX_VALUE))))
+                        .addContainerGap(31, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,27 +174,29 @@ public class Opomene extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
                         .addGap(18, 18, 18)
                         .addComponent(btnPojedinostiOpomene)
                         .addGap(18, 18, 18)
                         .addComponent(btnOpomenaPlacena)
                         .addGap(19, 19, 19))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnNapraviOpomenu))
                         .addGap(18, 18, 18)
                         .addComponent(btnPojedinostiRacuna)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(59, Short.MAX_VALUE))))
         );
 
         pack();
@@ -203,6 +206,7 @@ public class Opomene extends javax.swing.JFrame {
         odabirDatuma();
         racunjeMjesecaUnazad();
         napuniListe();
+        odabraniMjesec = (String)cmbMjeseci.getSelectedItem();
     }//GEN-LAST:event_cmbMjeseciActionPerformed
 
     private void btnNapraviOpomenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNapraviOpomenuActionPerformed
@@ -234,7 +238,8 @@ public class Opomene extends javax.swing.JFrame {
         opomena.setRacun(racun);
         opomena.setDatumUplateOpomene(null);
         obradaOpomena.save(opomena);
-        JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste opomenu za studenta " + student + " za mjesec");
+        JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste opomenu za studenta/icu " + student + " za "
+                + "mjesec " + odabraniMjesec);
         napuniListe();
     }//GEN-LAST:event_btnNapraviOpomenuActionPerformed
 
@@ -275,7 +280,7 @@ public class Opomene extends javax.swing.JFrame {
         for (Racun racun : listaRacuna) {
             r = racun;
         }
-        new PojedinostiNeplacenihRacuna(r).setVisible(true);
+        new PojedinostiRacuna(r).setVisible(true);
     }//GEN-LAST:event_btnPojedinostiRacunaActionPerformed
 
     private void btnPojedinostiOpomeneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPojedinostiOpomeneActionPerformed
@@ -344,7 +349,7 @@ public class Opomene extends javax.swing.JFrame {
         odabraniMjesec = (String)cmbMjeseci.getSelectedItem();
     }
 
-    private void racunjeMjesecaUnazad() {
+    public void racunjeMjesecaUnazad() {
         GregorianCalendar kalendar = (GregorianCalendar) Calendar.getInstance();
         kalendar.setTime(new Date());
         kalendar.set(Calendar.MONTH, cmbMjeseci.getSelectedIndex()-1);
