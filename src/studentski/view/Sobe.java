@@ -308,7 +308,6 @@ public class Sobe extends javax.swing.JFrame {
                 .list();
         for (Student student : lista) {
             model.addElement(student);
-            System.out.println(ANSI_BLUE + "Ime studenta je: " + student.getSifra()+ ANSI_RESET);
         }
         listaStudenta.setModel(model);
     }

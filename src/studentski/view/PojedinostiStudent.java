@@ -35,7 +35,6 @@ public class PojedinostiStudent extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         txtIme = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -48,10 +47,10 @@ public class PojedinostiStudent extends javax.swing.JFrame {
         txtBrojUgovora = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtSpol = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtFakultet = new javax.swing.JTextField();
 
         jLabel6.setText("jLabel1");
-
-        jTextField6.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -66,6 +65,8 @@ public class PojedinostiStudent extends javax.swing.JFrame {
         jLabel5.setText("Broj ugovora");
 
         jLabel7.setText("Spol");
+
+        jLabel8.setText("Fakultet");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -85,8 +86,10 @@ public class PojedinostiStudent extends javax.swing.JFrame {
                     .addComponent(txtBrojUgovora)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSpol)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(64, Short.MAX_VALUE))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFakultet))
+                .addContainerGap(205, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,7 +118,11 @@ public class PojedinostiStudent extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtSpol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtFakultet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -134,9 +141,10 @@ public class PojedinostiStudent extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JTextField txtBrojUgovora;
     private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtFakultet;
     private javax.swing.JTextField txtIme;
     private javax.swing.JTextField txtOIB;
     private javax.swing.JTextField txtPrezime;
@@ -154,5 +162,6 @@ public class PojedinostiStudent extends javax.swing.JFrame {
             txtSpol.setText("Muško");
         }
         txtBrojUgovora.setText(st.getBrojUgovora());
+        txtFakultet.setText(st.getFakultet());
     }
 }

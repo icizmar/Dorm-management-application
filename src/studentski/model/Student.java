@@ -22,6 +22,7 @@ import javax.persistence.Table;
 public class Student extends Osoba implements Serializable {
     
     private String brojUgovora;
+    private String fakultet;
     @ManyToOne
     private Soba soba;
     @OneToMany(mappedBy = "student")
@@ -57,6 +58,14 @@ public class Student extends Osoba implements Serializable {
 
     public void setSoba(Soba soba) {
         this.soba = soba;
+    }
+    
+    public String getFakultet() {
+        return fakultet;
+    }
+
+    public void setFakultet(String fakultet) {
+        this.fakultet = fakultet;
     }
 
     @Override
