@@ -27,6 +27,7 @@ public class Racun extends Entitet implements Serializable{
     private Integer cijena;
     @ManyToOne
     private Student student;
+    
     @OneToMany(mappedBy = "racun")
     private List<Opomena> opomene;
 

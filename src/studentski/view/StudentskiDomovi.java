@@ -8,7 +8,6 @@ package studentski.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -16,7 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import studentski.controller.Obrada;
-import studentski.model.Soba;
+import studentski.model.Paviljon;
 import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
 
@@ -63,6 +62,7 @@ public class StudentskiDomovi extends javax.swing.JFrame {
         btnDodajNovi = new javax.swing.JButton();
         btnPromjeni = new javax.swing.JButton();
         btnObrisi = new javax.swing.JButton();
+        btnPaviljoni = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -100,13 +100,22 @@ public class StudentskiDomovi extends javax.swing.JFrame {
             }
         });
 
+        btnPaviljoni.setText("Paviljoni");
+        btnPaviljoni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPaviljoniActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                    .addComponent(btnPaviljoni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(55, 55, 55)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -142,12 +151,17 @@ public class StudentskiDomovi extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(txtTelefonskiBroj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDodajNovi)
-                    .addComponent(btnPromjeni)
-                    .addComponent(btnObrisi))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnDodajNovi)
+                            .addComponent(btnPromjeni)
+                            .addComponent(btnObrisi)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPaviljoni)))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -202,8 +216,8 @@ public class StudentskiDomovi extends javax.swing.JFrame {
         
         boolean mozeObrisati=true;
         
-        for (Soba s : sd.getSobe()) {
-            if(!s.isObrisano()){
+        for (Paviljon p : sd.getPaviljoni()) {
+            if(!p.isObrisano()){
                 mozeObrisati=false;
                 break;
             }    
@@ -216,6 +230,15 @@ public class StudentskiDomovi extends javax.swing.JFrame {
         ucitajPodatke();
     }//GEN-LAST:event_btnObrisiActionPerformed
 
+    private void btnPaviljoniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaviljoniActionPerformed
+        StudentskiDom studentskiDom = lista.getSelectedValue();
+        if(studentskiDom == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Morate odabrati studentski dom u koji želite dodati paviljone");
+            return;
+        }
+        new Paviljoni(studentskiDom).setVisible(true);
+    }//GEN-LAST:event_btnPaviljoniActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -223,6 +246,7 @@ public class StudentskiDomovi extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDodajNovi;
     private javax.swing.JButton btnObrisi;
+    private javax.swing.JButton btnPaviljoni;
     private javax.swing.JButton btnPromjeni;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

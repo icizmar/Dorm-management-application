@@ -38,18 +38,18 @@ public class InicijalnoPunjenje {
         Soba soba1 = new Soba();
         Soba soba2 = new Soba();
         Soba soba3 = new Soba();
-        soba1.setPaviljon("crveni");
-        soba2.setPaviljon("crveni");
-        soba3.setPaviljon("plavi");
+        //soba1.setPaviljon("crveni");
+       // soba2.setPaviljon("crveni");
+       // soba3.setPaviljon("plavi");
         soba1.setBrojSobe(200);
         soba2.setBrojSobe(210);
         soba3.setBrojSobe(200);
         soba1.setBrojKreveta(2);
         soba2.setBrojKreveta(2);
         soba3.setBrojKreveta(2);
-        soba1.setStudentskiDom(dom);
-        soba2.setStudentskiDom(dom);
-        soba3.setStudentskiDom(dom);
+       // soba1.setStudentskiDom(dom);
+       // soba2.setStudentskiDom(dom);
+       // soba3.setStudentskiDom(dom);
         try{
             obradaSoba.save(soba1);
             obradaSoba.save(soba2);

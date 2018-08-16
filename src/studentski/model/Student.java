@@ -23,8 +23,10 @@ public class Student extends Osoba implements Serializable {
     
     private String brojUgovora;
     private String fakultet;
+    
     @ManyToOne
     private Soba soba;
+    
     @OneToMany(mappedBy = "student")
     private List<Racun> racuni = new ArrayList<>();
     

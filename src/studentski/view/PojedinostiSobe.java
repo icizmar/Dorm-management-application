@@ -28,8 +28,8 @@ public class PojedinostiSobe extends javax.swing.JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         this.soba = soba;
-        txtStudenstkiDom.setText(String.valueOf(soba.getStudentskiDom()));
-        txtPaviljon.setText(soba.getPaviljon());
+        //txtStudenstkiDom.setText(String.valueOf(soba.getStudentskiDom()));
+        //txtPaviljon.setText(soba.getPaviljon());
         txtBrojSobe.setText(String.valueOf(soba.getBrojSobe()));
         txtBrojKreveta.setText(String.valueOf(soba.getBrojKreveta()));
         DefaultListModel<Student> model = new DefaultListModel<>();

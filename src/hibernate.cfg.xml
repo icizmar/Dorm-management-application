@@ -35,6 +35,7 @@
 
     <!-- moraju se slijedno navesti klase koje su mapirane -->
     <mapping class="studentski.model.StudentskiDom" />
+    <mapping class="studentski.model.Paviljon" />
     <mapping class="studentski.model.Soba" />
     <mapping class="studentski.model.Student" />
     <mapping class="studentski.model.Racun" />

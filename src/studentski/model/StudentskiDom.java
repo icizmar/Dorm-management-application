@@ -25,16 +25,16 @@ public class StudentskiDom extends Entitet implements Serializable {
     private String brojTelefona;
     
     @OneToMany(mappedBy = "studentskiDom")
-    private List<Soba> sobe = new ArrayList<>();
+    private List<Paviljon> paviljoni = new ArrayList<>();
 
-    public List<Soba> getSobe() {
-        return sobe;
+    public List<Paviljon> getPaviljoni() {
+        return paviljoni;
     }
 
-    public void setSobe(List<Soba> sobe) {
-        this.sobe = sobe;
+    public void setPaviljoni(List<Paviljon> paviljoni) {
+        this.paviljoni = paviljoni;
     }
-    
+
     public String getNaziv() {
         return naziv;
     }

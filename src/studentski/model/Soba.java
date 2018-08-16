@@ -22,20 +22,13 @@ import javax.persistence.Table;
 public class Soba extends Entitet implements Serializable{
     
     private int brojSobe;
-    private String paviljon;
     private int brojKreveta;
+    
     @ManyToOne
-    private StudentskiDom studentskiDom;
+    private Paviljon paviljon; 
+    
     @OneToMany(mappedBy = "soba")
     private List<Student> studenti = new ArrayList<>();
-
-    public StudentskiDom getStudentskiDom() {
-        return studentskiDom;
-    }
-
-    public void setStudentskiDom(StudentskiDom studentskiDom) {
-        this.studentskiDom = studentskiDom;
-    }
 
     public int getBrojSobe() {
         return brojSobe;
@@ -45,11 +38,11 @@ public class Soba extends Entitet implements Serializable{
         this.brojSobe = brojSobe;
     }
 
-    public String getPaviljon() {
+    public Paviljon getPaviljon() {
         return paviljon;
     }
 
-    public void setPaviljon(String paviljon) {
+    public void setPaviljon(Paviljon paviljon) {
         this.paviljon = paviljon;
     }
 

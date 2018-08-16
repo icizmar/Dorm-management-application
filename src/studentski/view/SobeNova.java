@@ -182,7 +182,7 @@ public class SobeNova extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private Soba napuniSobu(Soba soba) {
-        soba.setPaviljon((String)cmbPaviljon.getSelectedItem());
+        //soba.setPaviljon((String)cmbPaviljon.getSelectedItem());
         try{
             soba.setBrojSobe(Integer.parseInt(txtBrojSobe.getText()));
         }catch(Exception e){
@@ -190,7 +190,7 @@ public class SobeNova extends javax.swing.JFrame {
             brojSobe = 1;
         }
         soba.setBrojKreveta(Integer.parseInt((String)cmbBrojKreveta.getSelectedItem()));
-        soba.setStudentskiDom(studentskiDom);
+       // soba.setStudentskiDom(studentskiDom);
         return soba;
     }
 
@@ -209,14 +209,14 @@ public class SobeNova extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Neispravno unesena nova soba!");
             return false;
         }
-        else if(soba.getStudentskiDom()==null){
-            JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali studentski dom");
-            return false;
-        }
-        else if(soba.getPaviljon().trim().length()==0){
-            JOptionPane.showMessageDialog(getRootPane(), "Nista odabrali paviljon");
-            return false;
-        }
+        //else if(soba.getStudentskiDom()==null){
+         //   JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali studentski dom");
+        //    return false;
+       // }
+        //else if(soba.getPaviljon().trim().length()==0){
+          //  JOptionPane.showMessageDialog(getRootPane(), "Nista odabrali paviljon");
+         //   return false;
+        //}
         else if(soba.getBrojKreveta()==0){
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali broj kreveta u sobi");
             return false;
