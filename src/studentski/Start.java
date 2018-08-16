@@ -7,7 +7,7 @@ package studentski;
 
 
 import studentski.pomocno.HibernateUtil;
-import studentski.view.Izbornik;
+import studentski.view.Pocetno;
 /**
  *
  * @author Ivan
@@ -19,7 +19,7 @@ public class Start {
      */
     public static void main(String[] args) {
         HibernateUtil.getSession();
-        new Izbornik().setVisible(true);
+        new Pocetno().setVisible(true);
     }
     
 }
