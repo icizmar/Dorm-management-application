@@ -223,7 +223,7 @@ public class StudentskiDomovi extends javax.swing.JFrame {
             }    
         }
         if(!mozeObrisati){
-            JOptionPane.showMessageDialog(getRootPane(), "Studentski dom se ne može obrisati jer se u njemu nalaze sobe!");
+            JOptionPane.showMessageDialog(getRootPane(), "Studentski dom se ne može obrisati jer se u njemu nalaze paviljoni!");
             return;
         }
         obrada.delete(sd);

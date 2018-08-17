@@ -19,7 +19,6 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import studentski.controller.Obrada;
-import studentski.model.Opomena;
 import studentski.model.Racun;
 import studentski.model.Student;
 import studentski.pomocno.HibernateUtil;

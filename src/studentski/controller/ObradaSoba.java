@@ -22,7 +22,6 @@ public class ObradaSoba {
     }
     
     public List<Soba> getSoba(Integer brojSobe, String paviljon){
-        System.out.println("Usao sam u pretragu");
         return HibernateUtil.getSession().createQuery(
                 " from Soba a where a.obrisano=false "
                         + " and brojSobe like :uvjet1 and paviljon like :uvjet2 ")

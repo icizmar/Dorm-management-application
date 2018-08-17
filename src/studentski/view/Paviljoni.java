@@ -7,6 +7,12 @@ package studentski.view;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.JOptionPane;
+import studentski.controller.ObradaPaviljon;
+import studentski.controller.StucException;
+import studentski.model.Paviljon;
+import studentski.model.Soba;
+import studentski.model.Student;
 import studentski.model.StudentskiDom;
 
 /**
@@ -16,6 +22,7 @@ import studentski.model.StudentskiDom;
 public class Paviljoni extends javax.swing.JFrame {
 
     private StudentskiDom studentskiDom;
+    private ObradaPaviljon obrada;
     
     /**
      * Creates new form Paviljoni
@@ -24,8 +31,10 @@ public class Paviljoni extends javax.swing.JFrame {
         initComponents();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+        obrada = new ObradaPaviljon();
         this.studentskiDom = studentskiDom;
         lblStudentskiDom.setText(studentskiDom.toString());
+        listaPaviljona.setModel(obrada.ucitajPaviljone());
     }
 
     /**
@@ -40,10 +49,47 @@ public class Paviljoni extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         listaPaviljona = new javax.swing.JList<>();
         lblStudentskiDom = new javax.swing.JLabel();
+        btnNovi = new javax.swing.JButton();
+        btnPromjeni = new javax.swing.JButton();
+        btnObrisi = new javax.swing.JButton();
+        txtNaziv = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtBrojSoba = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        listaPaviljona.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listaPaviljonaValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(listaPaviljona);
+
+        btnNovi.setText("Novi");
+        btnNovi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNoviActionPerformed(evt);
+            }
+        });
+
+        btnPromjeni.setText("Promjeni");
+        btnPromjeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPromjeniActionPerformed(evt);
+            }
+        });
+
+        btnObrisi.setText("Obrisi");
+        btnObrisi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnObrisiActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Naziv:");
+
+        jLabel2.setText("Broj soba:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -51,10 +97,30 @@ public class Paviljoni extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
-                    .addComponent(lblStudentskiDom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(236, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblStudentskiDom, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(45, 45, 45)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNaziv)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 46, Short.MAX_VALUE))
+                            .addComponent(txtBrojSoba)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnNovi, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnPromjeni)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnObrisi, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(25, 25, 25))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -62,17 +128,135 @@ public class Paviljoni extends javax.swing.JFrame {
                 .addGap(9, 9, 9)
                 .addComponent(lblStudentskiDom, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnNovi)
+                            .addComponent(btnPromjeni)
+                            .addComponent(btnObrisi)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtNaziv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtBrojSoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnNoviActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNoviActionPerformed
+        if(txtBrojSoba.getText().trim().length() == 0){
+            JOptionPane.showMessageDialog(getRootPane(), "Unesite broj soba u paviljonu");
+            return;
+        }
+        Paviljon pav = new Paviljon();
+        pav = napuniObjekt(pav);
+        try {
+            obrada.spremi(pav);
+        } catch (StucException e) {
+            switch(e.getKomponenta()){
+                case "naziv":
+                    txtNaziv.requestFocus();
+                    break;
+            }
+            JOptionPane.showMessageDialog(getRootPane(), e.getMessage());
+            return;
+        }
+        JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste novi paviljon u studentski dom: "
+                + pav.getStudentskiDom());
+        listaPaviljona.setModel(obrada.ucitajPaviljone());
+    }//GEN-LAST:event_btnNoviActionPerformed
 
+    private void listaPaviljonaValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listaPaviljonaValueChanged
+        if(evt.getValueIsAdjusting()){
+            return;
+        }
+        Paviljon pav = listaPaviljona.getSelectedValue();
+        if(pav == null){
+            return;
+        }
+        txtNaziv.setText(pav.getNaziv());
+        txtBrojSoba.setText(String.valueOf(pav.getBrojSoba()));
+    }//GEN-LAST:event_listaPaviljonaValueChanged
+
+    private void btnPromjeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPromjeniActionPerformed
+        Paviljon pav = listaPaviljona.getSelectedValue();
+        if(pav == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Prvo odaberite paviljon koji želite mjenjati!");
+            return;
+        }
+        if(txtNaziv.getText().trim().length()==0){
+            JOptionPane.showMessageDialog(getRootPane(), "Obavezno popunite naziv paviljona!");
+            return;
+        }
+        if(txtBrojSoba.getText().trim().length()==0){
+            JOptionPane.showMessageDialog(getRootPane(), "Obavezno unesite broj soba u paviljon!");
+            return;
+        }
+        pav = napuniObjekt(pav);
+        obrada.promjeni(pav);
+        listaPaviljona.setModel(obrada.ucitajPaviljone());
+        JOptionPane.showMessageDialog(getRootPane(), "Promjenili ste paviljon!");
+    }//GEN-LAST:event_btnPromjeniActionPerformed
+
+    private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed
+        Paviljon pav = listaPaviljona.getSelectedValue();
+        if(pav == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Prvo odaberite paviljon koji želite obrisati");
+            return;
+        }
+        boolean mozeObrisati = kontrolaPostojanjaSobaUPaviljonu(pav);
+        if(!mozeObrisati){
+            JOptionPane.showMessageDialog(getRootPane(), "Paviljon se ne može obrisati jer se u njemu nalaze sobe!");
+            return;
+        }
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog (getRootPane(), "Želite li obrisati "
+                + pav +" paviljon?", "Upozorenje", dialogButton);
+        if(dialogResult == JOptionPane.YES_OPTION){
+            obrada.obrisi(pav);
+            JOptionPane.showMessageDialog(getRootPane(), "Obrisali ste paviljon" );
+        }else{
+            return;
+        }
+        listaPaviljona.setModel(obrada.ucitajPaviljone());
+    }//GEN-LAST:event_btnObrisiActionPerformed
+
+    private Paviljon napuniObjekt(Paviljon pav) {
+        pav.setNaziv(txtNaziv.getText());
+        pav.setBrojSoba(Integer.valueOf(txtBrojSoba.getText()));
+        pav.setStudentskiDom(studentskiDom);
+        return pav;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnNovi;
+    private javax.swing.JButton btnObrisi;
+    private javax.swing.JButton btnPromjeni;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblStudentskiDom;
-    private javax.swing.JList<String> listaPaviljona;
+    private javax.swing.JList<Paviljon> listaPaviljona;
+    private javax.swing.JTextField txtBrojSoba;
+    private javax.swing.JTextField txtNaziv;
     // End of variables declaration//GEN-END:variables
+
+    private boolean kontrolaPostojanjaSobaUPaviljonu(Paviljon pav) {
+        boolean mozeObrisati = true;
+        for (Soba s : pav.getSobe()) {
+            if(!s.isObrisano()){
+                mozeObrisati=false;
+                break;
+            }    
+        }
+        return mozeObrisati;
+    }
+
 }
