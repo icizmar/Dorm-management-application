@@ -13,15 +13,15 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.hibernate.Session;
 import studentski.controller.Obrada;
+import studentski.controller.ObradaStudent;
 import studentski.model.Student;
+import studentski.pomocno.HibernateUtil;
 
 /**
  *
@@ -30,6 +30,7 @@ import studentski.model.Student;
 public class Pocetno extends javax.swing.JFrame {
 
     private Obrada<Student> obrada;
+    private ObradaStudent obradaStudent;
     /**
      * Creates new form Pocetno
      */
@@ -38,6 +39,7 @@ public class Pocetno extends javax.swing.JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         obrada = new Obrada();
+        obradaStudent = new ObradaStudent();
     }
 
     /**
@@ -72,21 +74,21 @@ public class Pocetno extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(108, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnPokreniAplikaciju, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnInicijalnoPunjenje, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
-                .addGap(104, 104, 104))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(48, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnPokreniAplikaciju, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnInicijalnoPunjenje, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(77, 77, 77)
+                .addGap(36, 36, 36)
                 .addComponent(btnPokreniAplikaciju, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54)
+                .addGap(39, 39, 39)
                 .addComponent(btnInicijalnoPunjenje, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         pack();
@@ -98,6 +100,10 @@ public class Pocetno extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPokreniAplikacijuActionPerformed
 
     private void btnInicijalnoPunjenjeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicijalnoPunjenjeActionPerformed
+        if(obradaStudent.imaLiStudenataUDomu()){
+            JOptionPane.showMessageDialog(getRootPane(), "U Dom su već uneseni studenti nakon natječaja!");
+            return;
+        }
         URL url = null;
         Gson gson = new Gson();
         InputStreamReader reader = null;
@@ -115,6 +121,7 @@ public class Pocetno extends javax.swing.JFrame {
         });
         JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste " + listOfStudents.size() + 
                 " studenata u bazu!");
+        new UpisivanjeStudenataUSobe().setVisible(true);
     }//GEN-LAST:event_btnInicijalnoPunjenjeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

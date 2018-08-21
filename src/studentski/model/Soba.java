@@ -8,6 +8,7 @@ package studentski.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -21,8 +22,8 @@ import javax.persistence.Table;
 @Table
 public class Soba extends Entitet implements Serializable{
     
-    private int brojSobe;
-    private int brojKreveta;
+    private Integer brojSobe;
+    private Integer brojKreveta;
     
     @ManyToOne
     private Paviljon paviljon; 
@@ -64,9 +65,6 @@ public class Soba extends Entitet implements Serializable{
 
     @Override
     public String toString() {
-        return getBrojSobe() + " " + getPaviljon();
+        return String.valueOf(brojSobe);
     }
-    
-    
-   
 }

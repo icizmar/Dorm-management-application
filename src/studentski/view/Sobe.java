@@ -8,16 +8,23 @@ package studentski.view;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import org.hibernate.Session;
 import studentski.controller.Obrada;
+import studentski.controller.ObradaPaviljon;
+import studentski.controller.ObradaSoba;
+import studentski.controller.ObradaStudent;
+import studentski.controller.ObradaStudentskiDom;
+import studentski.controller.StucException;
 import studentski.model.Racun;
+import studentski.model.Paviljon;
 import studentski.model.Soba;
 import studentski.model.Student;
+import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
 
 /**
@@ -26,39 +33,32 @@ import studentski.pomocno.HibernateUtil;
  */
 public class Sobe extends javax.swing.JFrame {
 
-    private Obrada<Soba> obradaSoba;
-    private Obrada<Student> obradaStudent;
-    private Integer brojSobe;
-    private String paviljon;
+    private ObradaSoba obradaSoba;
+    private ObradaPaviljon obradaPaviljon;
+    private ObradaStudent obradaStudent;
+    private ObradaStudentskiDom obradaStudentskiDom;
+    private Obrada<Soba> obrada;
+    private Paviljon paviljon;
+    private StudentskiDom studentskiDom;
     private Soba odabranaSoba;
     private Student odabraniStudent;
     private Student pojedinostiStudenta;
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_RESET = "\u001B[0m";
 
     /**
      * Creates new form Sobe
      */
     public Sobe() {
         initComponents();
-        cmbPaviljon.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            }
+        cmbPaviljon.addActionListener((ActionEvent e) -> {
         });
-        cmbBrojSobe.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            }
+        cmbSoba.addActionListener((ActionEvent e) -> {
+        });
+        cmbStudentskiDom.addActionListener((ActionEvent e) -> {
         });
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
-        obradaSoba = new Obrada<>();
-        obradaStudent = new Obrada<>();
-        cmbPaviljon.setSelectedIndex(0);
-        try{
-            cmbBrojSobe.setSelectedIndex(0);
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(getRootPane(), "Nepostoje sobe u domu, unesite novu!");
-        }
+        instanciranjeObrada();
+        napuniDomove();     
     }
 
     /**
@@ -71,10 +71,9 @@ public class Sobe extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        cmbBrojSobe = new javax.swing.JComboBox<>();
+        cmbSoba = new javax.swing.JComboBox<>();
         cmbPaviljon = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listaStudenta = new javax.swing.JList<>();
         jLabel4 = new javax.swing.JLabel();
@@ -87,27 +86,26 @@ public class Sobe extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         btnObrisiSobu = new javax.swing.JButton();
         btnPojedinostiSobe = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        cmbStudentskiDom = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Odaberi sobu:");
+        jLabel1.setText("Odaberi paviljon:");
 
-        cmbBrojSobe.addActionListener(new java.awt.event.ActionListener() {
+        cmbSoba.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbBrojSobeActionPerformed(evt);
+                cmbSobaActionPerformed(evt);
             }
         });
 
-        cmbPaviljon.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "crveni", "plavi" }));
         cmbPaviljon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbPaviljonActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("2. Odaberi broj sobe:");
-
-        jLabel3.setText("1. Odaberi paviljon:");
+        jLabel2.setText("Odaberi broj sobe:");
 
         jScrollPane2.setViewportView(listaStudenta);
 
@@ -166,6 +164,14 @@ public class Sobe extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setText("Odaberi studentski dom:");
+
+        cmbStudentskiDom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbStudentskiDomActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -174,142 +180,103 @@ public class Sobe extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                            .addComponent(btnPojedinostiStudenta, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnPojedinostiSobe, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGap(156, 156, 156)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(cmbSoba, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cmbPaviljon, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(4, 4, 4))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(43, 43, 43)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnNoviStudent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnPromjeniStudenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnObrisiStudenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPojedinostiStudenta, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(47, 47, 47))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(161, 161, 161))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(cmbPaviljon, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(28, 28, 28))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addGap(24, 24, 24)))
-                                .addComponent(jLabel2))
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmbStudentskiDom, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(119, 119, 119)
-                                .addComponent(cmbBrojSobe, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnPojedinostiSobe, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnNovaSoba, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnObrisiSobu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(51, Short.MAX_VALUE))
+                                .addComponent(btnNovaSoba)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnObrisiSobu, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(113, 113, 113)
+                                .addComponent(btnNoviStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnPromjeniStudenta)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnObrisiStudenta, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(47, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(cmbStudentskiDom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(cmbPaviljon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cmbPaviljon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbBrojSobe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)
-                        .addComponent(btnPojedinostiSobe))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnNovaSoba)
-                        .addGap(26, 26, 26)
-                        .addComponent(btnObrisiSobu)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel2)
+                            .addComponent(cmbSoba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnPojedinostiStudenta)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnNoviStudent)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnPromjeniStudenta)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnObrisiStudenta)))
-                .addGap(45, 45, 45))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPojedinostiSobe)
+                    .addComponent(btnPojedinostiStudenta))
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel7))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNoviStudent)
+                    .addComponent(btnPromjeniStudenta)
+                    .addComponent(btnObrisiStudenta)
+                    .addComponent(btnObrisiSobu)
+                    .addComponent(btnNovaSoba))
+                .addGap(39, 39, 39))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cmbBrojSobeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBrojSobeActionPerformed
-       napuniStudente();
-    }//GEN-LAST:event_cmbBrojSobeActionPerformed
-    
-    public void napuniSobe() {
-        paviljon = (String) cmbPaviljon.getSelectedItem();
-        DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<>();
-        List<Soba> lista = HibernateUtil.getSession().createQuery(
-                " from Soba a where a.obrisano=false and paviljon like :uvjet")
-                .setString("uvjet", "%" + paviljon + "%")
-                .list();
-        for (Soba soba : lista) {
-            model.addElement(soba.getBrojSobe());
-        }
-        cmbBrojSobe.setModel(model);
-    }
-    
-    public void napuniSobeNakonUnosaNove(){
-        cmbPaviljon.setSelectedIndex(0);
-        paviljon = (String) cmbPaviljon.getSelectedItem();
-        DefaultComboBoxModel<Integer> model = new DefaultComboBoxModel<>();
-        List<Soba> lista = HibernateUtil.getSession().createQuery(
-                " from Soba a where a.obrisano=false and paviljon like :uvjet")
-                .setString("uvjet", "%" + paviljon + "%")
-                .list();
-        for (Soba soba : lista) {
-            model.addElement(soba.getBrojSobe());
-        }
-        cmbBrojSobe.setModel(model);
-    }
-    
+    private void cmbSobaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSobaActionPerformed
+        odabranaSoba = (Soba) cmbSoba.getSelectedItem();
+        napuniStudente();
+    }//GEN-LAST:event_cmbSobaActionPerformed
+
     public void napuniStudente(){
-        brojSobe = (Integer) cmbBrojSobe.getSelectedItem();
-        Session s = HibernateUtil.getSession();
-        s.clear();
-        List<Soba> listaSoba = s.createQuery(
-                " from Soba a where a.obrisano=false and paviljon like :uvjet1 and brojsobe like :uvjet2 ")
-                .setString("uvjet1", "%" + paviljon + "%")
-                .setString("uvjet2", "%" + brojSobe + "%")
-                .list();
-        for (Soba soba : listaSoba) {
-            odabranaSoba = soba;
-        }
-        DefaultListModel<Student> model = new DefaultListModel<>();
-        List<Student> lista = HibernateUtil.getSession().createQuery(
-                " from Student a where a.obrisano=false and soba like :uvjet ")
-                .setString("uvjet", "%" + odabranaSoba.getSifra() + "%")
-                .list();
-        for (Student student : lista) {
-            model.addElement(student);
-        }
-        listaStudenta.setModel(model);
+        //Dohvati studente Iz odabrane sobe
+        List<Student> listaStudenata = obradaStudent.dohvatiSveStudenteIzOdabraneSobe(odabranaSoba);
+        DefaultListModel<Student> dlmStudent = new DefaultListModel<>();
+        listaStudenata.forEach(x -> {
+            dlmStudent.addElement(x);
+        });
+        listaStudenta.setModel(dlmStudent);
     }
 
     private void btnPojedinostiStudentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPojedinostiStudentaActionPerformed
@@ -370,9 +337,13 @@ public class Sobe extends javax.swing.JFrame {
         int dialogResult = JOptionPane.showConfirmDialog (getRootPane(), "Želite li odjaviti "
                 + "studenta: " + odabraniStudent +"?", "Upozorenje", dialogButton);
         if(dialogResult == JOptionPane.YES_OPTION){
-            obradaStudent.delete(odabraniStudent);
-            JOptionPane.showMessageDialog(getRootPane(), "Odjavili ste studenta "
-            + odabraniStudent);
+            try {
+                obradaStudent.obrisi(odabraniStudent);
+                JOptionPane.showMessageDialog(getRootPane(), "Odjavili ste studenta "
+                        + odabraniStudent);
+            } catch (StucException ex) {
+                Logger.getLogger(Sobe.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }else{
             return;
         }
@@ -380,7 +351,7 @@ public class Sobe extends javax.swing.JFrame {
     }//GEN-LAST:event_btnObrisiStudentaActionPerformed
 
     private void btnNovaSobaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovaSobaActionPerformed
-        new SobeNova(this).setVisible(true);
+        new SobeNova(paviljon, this).setVisible(true);
     }//GEN-LAST:event_btnNovaSobaActionPerformed
 
     private void btnObrisiSobuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiSobuActionPerformed
@@ -389,14 +360,7 @@ public class Sobe extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali sobu za brisanje");
             return;
         }
-        boolean mozeObrisati=true;
-        
-        for (Student s : soba.getStudenti()) {
-            if(!s.isObrisano()){
-                mozeObrisati=false;
-                break;
-            }    
-        }
+        boolean mozeObrisati = provjeraStudetaUSobi(soba);
         if(!mozeObrisati){
             JOptionPane.showMessageDialog(getRootPane(), "Soba se ne može brisati jer se u njoj nalaze studenti!");
             return;
@@ -405,7 +369,7 @@ public class Sobe extends javax.swing.JFrame {
         int dialogResult = JOptionPane.showConfirmDialog (getRootPane(), "Želite li obrisati "
                 + "sobu: " + soba.getBrojSobe() + " " + soba.getPaviljon() +"?", "Upozorenje", dialogButton);
         if(dialogResult == JOptionPane.YES_OPTION){
-            obradaSoba.delete(soba);
+            obrada.delete(soba);
             JOptionPane.showMessageDialog(getRootPane(), "Izbrisali ste sobu: "
             + soba.getBrojSobe() + " " + soba.getPaviljon());
         }else{
@@ -422,6 +386,10 @@ public class Sobe extends javax.swing.JFrame {
         new PojedinostiSobe(odabranaSoba).setVisible(true);
     }//GEN-LAST:event_btnPojedinostiSobeActionPerformed
 
+    private void cmbStudentskiDomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStudentskiDomActionPerformed
+        napuniPaviljone();
+    }//GEN-LAST:event_cmbStudentskiDomActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -434,17 +402,83 @@ public class Sobe extends javax.swing.JFrame {
     private javax.swing.JButton btnPojedinostiSobe;
     private javax.swing.JButton btnPojedinostiStudenta;
     private javax.swing.JButton btnPromjeniStudenta;
-    private javax.swing.JComboBox<Integer> cmbBrojSobe;
-    private javax.swing.JComboBox<String> cmbPaviljon;
+    private javax.swing.JComboBox<Paviljon> cmbPaviljon;
+    private javax.swing.JComboBox<Soba> cmbSoba;
+    private javax.swing.JComboBox<StudentskiDom> cmbStudentskiDom;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<Student> listaStudenta;
     // End of variables declaration//GEN-END:variables
 
+    private void instanciranjeObrada() {
+        obrada = new Obrada<>();
+        obradaSoba = new ObradaSoba();
+        obradaStudent = new ObradaStudent();
+        obradaPaviljon = new ObradaPaviljon();
+        obradaStudentskiDom = new ObradaStudentskiDom();
+    }
 
+    public void napuniDomove() {
+        DefaultComboBoxModel<StudentskiDom> dcbmStudentskiDom = new DefaultComboBoxModel<>();
+        List<StudentskiDom> listaDomova = obradaStudentskiDom.dohvatiSveDomove();
+        listaDomova.forEach(x -> {
+            dcbmStudentskiDom.addElement(x);
+        });
+        cmbStudentskiDom.setModel(dcbmStudentskiDom);
+        if(listaDomova.size()>0){
+            cmbStudentskiDom.setSelectedIndex(0);
+        }else{
+            JOptionPane.showMessageDialog(getRootPane(), "Ne postoje studentski domovi, unesite ih!");
+            new StudentskiDomovi().setVisible(true);
+            dispose();
+        } 
+    }
+    
+    public void napuniPaviljone(){
+        studentskiDom = (StudentskiDom) cmbStudentskiDom.getSelectedItem();
+        DefaultComboBoxModel<Paviljon> dcmbPaviljon = new DefaultComboBoxModel<>();
+        List<Paviljon> listaPaviljona = obradaPaviljon.dohvatiSvePaviljoneUOdabranomDomu(studentskiDom);
+        listaPaviljona.forEach(x -> {
+            dcmbPaviljon.addElement(x);
+        });
+        cmbPaviljon.setModel(dcmbPaviljon);
+        if(listaPaviljona.size()>0){
+            cmbPaviljon.setSelectedIndex(0);
+        }else{
+            JOptionPane.showMessageDialog(getRootPane(), "Nema paviljona, unesi novi");
+            new Paviljoni(studentskiDom).setVisible(true);
+            dispose();
+        }
+    }
+    
+    public void napuniSobe(){
+        paviljon = (Paviljon) cmbPaviljon.getSelectedItem();
+        DefaultComboBoxModel<Soba> dcbmSoba = new DefaultComboBoxModel<>();
+        List<Soba> listaSoba = obradaSoba.dohvatiSveSobeZaOdabraniPaviljon(paviljon);
+        listaSoba.forEach(x -> {
+            dcbmSoba.addElement(x);
+        });
+        cmbSoba.setModel(dcbmSoba);
+        if(listaSoba.size()>0){
+            cmbSoba.setSelectedIndex(0);
+        }else{
+            JOptionPane.showMessageDialog(getRootPane(), "Nema soba u paviljonu, unesi nove");
+        }
+    }
+
+    private boolean provjeraStudetaUSobi(Soba soba) {
+        boolean mozeObrisati = true;
+        for (Student s : soba.getStudenti()) {
+            if(!s.isObrisano()){
+                mozeObrisati=false;
+                break;
+            }    
+        }
+        return mozeObrisati;
+    }
 }

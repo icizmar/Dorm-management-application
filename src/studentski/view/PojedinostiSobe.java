@@ -28,8 +28,8 @@ public class PojedinostiSobe extends javax.swing.JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         this.soba = soba;
-        //txtStudenstkiDom.setText(String.valueOf(soba.getStudentskiDom()));
-        //txtPaviljon.setText(soba.getPaviljon());
+        txtStudenstkiDom.setText(String.valueOf(soba.getPaviljon().getStudentskiDom()));
+        txtPaviljon.setText(soba.getPaviljon().toString());
         txtBrojSobe.setText(String.valueOf(soba.getBrojSobe()));
         txtBrojKreveta.setText(String.valueOf(soba.getBrojKreveta()));
         DefaultListModel<Student> model = new DefaultListModel<>();
@@ -67,11 +67,24 @@ public class PojedinostiSobe extends javax.swing.JFrame {
 
         jLabel1.setText("Studentski dom:");
 
+        txtStudenstkiDom.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         jLabel2.setText("Paviljon:");
+
+        txtPaviljon.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtPaviljon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPaviljonActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Broj sobe:");
 
+        txtBrojSobe.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         jLabel4.setText("Broj kreveta:");
+
+        txtBrojKreveta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel5.setText("Studenti u sobi:");
 
@@ -124,6 +137,10 @@ public class PojedinostiSobe extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtPaviljonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPaviljonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPaviljonActionPerformed
 
     /**
      * @param args the command line arguments

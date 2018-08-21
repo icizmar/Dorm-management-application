@@ -7,8 +7,8 @@
     <!-- 
     Kreirati bazu 
         create database studentski character set utf8 collate utf8_general_ci;
-
-     --> 
+        drop database studentski;
+     -->
     <property name="connection.url">jdbc:mysql://localhost:3306/studentski</property>
     <property name="connection.username">edunova</property>
     <property name="connection.password">edunova</property>
@@ -19,6 +19,7 @@
     <property name="hibernate.connection.useUnicode">true</property>
     <property name="show_sql">true</property>
     <property name="format_sql">true</property>
+    <property name="hibernate.enable_lazy_load_no_trans">true</property>
     
     <!-- 
     validate: validate the schema, makes no changes to the database.

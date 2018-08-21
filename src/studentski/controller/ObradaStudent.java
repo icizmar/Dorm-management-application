@@ -6,7 +6,9 @@
 package studentski.controller;
 
 import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import studentski.model.Soba;
 import studentski.model.Student;
 import studentski.pomocno.HibernateUtil;
 
@@ -33,6 +35,16 @@ public class ObradaStudent {
                 .list();
     }
     
+    public List<Student> dohvatiSveStudenteIzOdabraneSobe(Soba soba){
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        List<Student> listaStudenata = s.createQuery(
+                " from Student a where a.obrisano = false and soba like :uvjet")
+                .setString("uvjet", "%" + soba.getSifra() + "%")
+                .list();
+        return listaStudenata;
+    }
+    
     public Student spremi(Student st) throws StucException {
         
         if(st.getIme()== null || st.getIme().trim().length()==0){
@@ -49,5 +61,29 @@ public class ObradaStudent {
     public Student obrisi(Student st)throws StucException {
         obrada.delete(st);
         return st;
+    }
+    
+    public boolean imaLiStudenataUDomu(){
+        boolean check = false;
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        Query query = s.createQuery(
+            "select count(*) from Student a where a.obrisano = false");
+        Long count = ((Long)query.uniqueResult());
+        if(count == 0){
+            check = false;
+        }else{
+            check = true;
+        }
+        return check;
+    }
+    
+    public List<Student> dohvatiStudenteKojiNisuUSobi(){
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        List<Student> listaStudenata = s.createQuery(
+                "from Student a where a.obrisano = false and "
+                        + "soba is null").list();
+        return listaStudenata;
     }
 }

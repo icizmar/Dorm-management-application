@@ -7,15 +7,10 @@ package studentski.view;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import studentski.controller.Obrada;
+import studentski.model.Paviljon;
 import studentski.model.Soba;
-import studentski.model.StudentskiDom;
-import studentski.pomocno.HibernateUtil;
 
 /**
  *
@@ -24,24 +19,21 @@ import studentski.pomocno.HibernateUtil;
 public class SobeNova extends javax.swing.JFrame {
     
     private Obrada<Soba> obrada;
-    private StudentskiDom studentskiDom;
+    private Paviljon paviljon;
     private Integer brojSobe;
     private Sobe prozor;
 
     /**
      * Creates new form SobeNova
      */
-    public SobeNova(Sobe prozor) {
+    public SobeNova(Paviljon paviljon, Sobe prozor) {
         initComponents();
-        this.prozor=prozor;
-        cmbStudentskiDomovi.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            }
-        });
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+        this.prozor=prozor;
+        this.paviljon = paviljon;
         obrada = new Obrada<>();
-        napuniStudentske();
+        lblPaviljon.setText(paviljon.toString());
     }
 
     /**
@@ -54,20 +46,16 @@ public class SobeNova extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        cmbPaviljon = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         txtBrojSobe = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         btnDodajNoviDom = new javax.swing.JButton();
         cmbBrojKreveta = new javax.swing.JComboBox<>();
-        jLabel5 = new javax.swing.JLabel();
-        cmbStudentskiDomovi = new javax.swing.JComboBox<>();
+        lblPaviljon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Paviljon:");
-
-        cmbPaviljon.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "crveni", "plavi" }));
 
         jLabel2.setText("Broj sobe:");
 
@@ -81,12 +69,9 @@ public class SobeNova extends javax.swing.JFrame {
         });
 
         cmbBrojKreveta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "1" }));
-
-        jLabel5.setText("Spremi sobu u studentski dom:");
-
-        cmbStudentskiDomovi.addActionListener(new java.awt.event.ActionListener() {
+        cmbBrojKreveta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbStudentskiDomoviActionPerformed(evt);
+                none(evt);
             }
         });
 
@@ -94,36 +79,27 @@ public class SobeNova extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnDodajNoviDom)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnDodajNoviDom, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(cmbBrojKreveta, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbPaviljon, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtBrojSobe)
+                    .addComponent(txtBrojSobe, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
-                    .addComponent(cmbStudentskiDomovi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(86, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPaviljon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cmbStudentskiDomovi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cmbPaviljon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(lblPaviljon, javax.swing.GroupLayout.DEFAULT_SIZE, 15, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtBrojSobe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -131,9 +107,9 @@ public class SobeNova extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cmbBrojKreveta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addGap(33, 33, 33)
                 .addComponent(btnDodajNoviDom)
-                .addGap(21, 21, 21))
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -141,9 +117,8 @@ public class SobeNova extends javax.swing.JFrame {
 
     private void btnDodajNoviDomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajNoviDomActionPerformed
         Soba soba = new Soba();
-        brojSobe = 0;
         soba = napuniSobu(soba);
-        if(brojSobe == 1){
+        if(brojSobe == 0){
             JOptionPane.showMessageDialog(getRootPane(), "Neispravno unesen broj sobe!");
             return;
         }
@@ -158,9 +133,9 @@ public class SobeNova extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnDodajNoviDomActionPerformed
 
-    private void cmbStudentskiDomoviActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStudentskiDomoviActionPerformed
-        studentskiDom = (StudentskiDom)cmbStudentskiDomovi.getSelectedItem();
-    }//GEN-LAST:event_cmbStudentskiDomoviActionPerformed
+    private void none(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_none
+     // TODO add your handling code here:
+    }//GEN-LAST:event_none
 
    
     
@@ -172,36 +147,24 @@ public class SobeNova extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDodajNoviDom;
     private javax.swing.JComboBox<String> cmbBrojKreveta;
-    private javax.swing.JComboBox<String> cmbPaviljon;
-    private javax.swing.JComboBox<StudentskiDom> cmbStudentskiDomovi;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel lblPaviljon;
     private javax.swing.JTextField txtBrojSobe;
     // End of variables declaration//GEN-END:variables
 
     private Soba napuniSobu(Soba soba) {
-        //soba.setPaviljon((String)cmbPaviljon.getSelectedItem());
+        soba.setPaviljon(paviljon);
+        brojSobe = 1;
         try{
-            soba.setBrojSobe(Integer.parseInt(txtBrojSobe.getText()));
+            soba.setBrojSobe(Integer.valueOf(txtBrojSobe.getText()));
         }catch(Exception e){
             soba.setBrojSobe(0);
-            brojSobe = 1;
+            brojSobe = 0;
         }
-        soba.setBrojKreveta(Integer.parseInt((String)cmbBrojKreveta.getSelectedItem()));
-       // soba.setStudentskiDom(studentskiDom);
+        soba.setBrojKreveta(Integer.valueOf((String)cmbBrojKreveta.getSelectedItem()));
         return soba;
-    }
-
-    private void napuniStudentske() {
-        DefaultComboBoxModel<StudentskiDom> model = new DefaultComboBoxModel<>();
-        List<StudentskiDom> lista = HibernateUtil.getSession().createQuery(
-            " from StudentskiDom a where a.obrisano=false").list();
-        for (StudentskiDom studentskiDom : lista) {
-            model.addElement(studentskiDom);
-        }
-        cmbStudentskiDomovi.setModel(model);
     }
 
     private boolean provjeri(Soba soba) {
@@ -209,14 +172,6 @@ public class SobeNova extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Neispravno unesena nova soba!");
             return false;
         }
-        //else if(soba.getStudentskiDom()==null){
-         //   JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali studentski dom");
-        //    return false;
-       // }
-        //else if(soba.getPaviljon().trim().length()==0){
-          //  JOptionPane.showMessageDialog(getRootPane(), "Nista odabrali paviljon");
-         //   return false;
-        //}
         else if(soba.getBrojKreveta()==0){
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali broj kreveta u sobi");
             return false;

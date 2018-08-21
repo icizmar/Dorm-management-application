@@ -5,12 +5,12 @@
  */
 package studentski.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import studentski.model.Paviljon;
+import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
 
 /**
@@ -50,5 +50,15 @@ public class ObradaPaviljon {
             dlmPaviljon.addElement(x);
         });
         return dlmPaviljon;
+    }
+    
+    public List<Paviljon> dohvatiSvePaviljoneUOdabranomDomu(StudentskiDom stuDom){
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        List<Paviljon> listaPaviljona = s.createQuery( 
+                " from Paviljon a where a.obrisano=false and studentskiDom like :uvjet")
+                .setString("uvjet", "%" + stuDom.getSifra() + "%")
+                .list();
+        return listaPaviljona;
     }
 }
