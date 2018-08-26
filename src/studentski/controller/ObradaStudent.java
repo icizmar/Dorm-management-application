@@ -5,11 +5,16 @@
  */
 package studentski.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import studentski.model.Paviljon;
+import studentski.model.Racun;
 import studentski.model.Soba;
 import studentski.model.Student;
+import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
 
 /**
@@ -19,9 +24,13 @@ import studentski.pomocno.HibernateUtil;
 public class ObradaStudent {
     
     private Obrada<Student> obrada;
+    private ObradaPaviljon obradaPaviljon;
+    private ObradaRacun obradaRacun;
     
     public ObradaStudent(){
         obrada = new Obrada<>();
+        obradaPaviljon = new ObradaPaviljon();
+        obradaRacun = new ObradaRacun();
     }
     
     public List<Student> getStudenti(String uvjet){
@@ -86,4 +95,33 @@ public class ObradaStudent {
                         + "soba is null").list();
         return listaStudenata;
     }
+
+    
+    public List<Student> getSviStudentiBezRacuna(StudentskiDom stuDom, Date pMjeseca, Date kMjeseca){
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        List<Student> listaStudenataBezRacuna = new ArrayList<>();
+        List<Student> listaSvihStudenata = s.createQuery(
+                "select st " +
+                "from Student as st " +
+                "inner join Soba as so on so.sifra = st.soba " +
+                "inner join Paviljon as pa on pa.sifra = so.paviljon " +
+                "inner join StudentskiDom as sd on sd.sifra = pa.studentskiDom " +
+                "where sd.sifra = :uvjet")
+                .setString("uvjet", String.valueOf(stuDom.getSifra()))
+                .list();
+        List<Racun> listaRacuna = obradaRacun.getListaRacunaUOdabranomMjesecu(pMjeseca, kMjeseca);
+        List<Integer> listaSifriStudenataNaRacunima = new ArrayList<>();
+        listaRacuna.forEach(element -> {
+            listaSifriStudenataNaRacunima.add(element.getStudent().getSifra());
+        });
+        listaSvihStudenata.forEach(element -> {
+            if(!listaSifriStudenataNaRacunima.contains(element.getSifra())){
+                listaStudenataBezRacuna.add(element);
+            }
+        });
+        listaStudenataBezRacuna.forEach(x -> {System.out.println(x);});
+        return listaStudenataBezRacuna;
+    }
+    
 }

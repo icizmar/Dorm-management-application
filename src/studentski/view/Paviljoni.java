@@ -22,7 +22,7 @@ import studentski.model.StudentskiDom;
 public class Paviljoni extends javax.swing.JFrame {
 
     private StudentskiDom studentskiDom;
-    private ObradaPaviljon obrada;
+    private ObradaPaviljon obradaPaviljon;
     
     /**
      * Creates new form Paviljoni
@@ -31,10 +31,10 @@ public class Paviljoni extends javax.swing.JFrame {
         initComponents();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
-        obrada = new ObradaPaviljon();
+        obradaPaviljon = new ObradaPaviljon();
         this.studentskiDom = studentskiDom;
         lblStudentskiDom.setText(studentskiDom.toString());
-        listaPaviljona.setModel(obrada.ucitajPaviljone());
+        listaPaviljona.setModel(obradaPaviljon.ucitajPaviljone(this.studentskiDom));
     }
 
     /**
@@ -158,7 +158,7 @@ public class Paviljoni extends javax.swing.JFrame {
         Paviljon pav = new Paviljon();
         pav = napuniObjekt(pav);
         try {
-            obrada.spremi(pav);
+            obradaPaviljon.spremi(pav);
         } catch (StucException e) {
             switch(e.getKomponenta()){
                 case "naziv":
@@ -170,7 +170,7 @@ public class Paviljoni extends javax.swing.JFrame {
         }
         JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste novi paviljon u studentski dom: "
                 + pav.getStudentskiDom());
-        listaPaviljona.setModel(obrada.ucitajPaviljone());
+        listaPaviljona.setModel(obradaPaviljon.ucitajPaviljone(studentskiDom));
     }//GEN-LAST:event_btnNoviActionPerformed
 
     private void listaPaviljonaValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listaPaviljonaValueChanged
@@ -200,8 +200,8 @@ public class Paviljoni extends javax.swing.JFrame {
             return;
         }
         pav = napuniObjekt(pav);
-        obrada.promjeni(pav);
-        listaPaviljona.setModel(obrada.ucitajPaviljone());
+        obradaPaviljon.promjeni(pav);
+        listaPaviljona.setModel(obradaPaviljon.ucitajPaviljone(studentskiDom));
         JOptionPane.showMessageDialog(getRootPane(), "Promjenili ste paviljon!");
     }//GEN-LAST:event_btnPromjeniActionPerformed
 
@@ -220,12 +220,12 @@ public class Paviljoni extends javax.swing.JFrame {
         int dialogResult = JOptionPane.showConfirmDialog (getRootPane(), "Želite li obrisati "
                 + pav +" paviljon?", "Upozorenje", dialogButton);
         if(dialogResult == JOptionPane.YES_OPTION){
-            obrada.obrisi(pav);
+            obradaPaviljon.obrisi(pav);
             JOptionPane.showMessageDialog(getRootPane(), "Obrisali ste paviljon" );
         }else{
             return;
         }
-        listaPaviljona.setModel(obrada.ucitajPaviljone());
+        listaPaviljona.setModel(obradaPaviljon.ucitajPaviljone(studentskiDom));
     }//GEN-LAST:event_btnObrisiActionPerformed
 
     private Paviljon napuniObjekt(Paviljon pav) {

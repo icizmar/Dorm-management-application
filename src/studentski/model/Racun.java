@@ -27,6 +27,11 @@ public class Racun extends Entitet implements Serializable{
     private Integer cijena;
     @ManyToOne
     private Student student;
+
+    @Override
+    public String toString() {
+        return "Racun{" + "datumIzdavanjaRacuna=" + datumIzdavanjaRacuna + ", datumUplateRacuna=" + datumUplateRacuna + ", placen=" + placen + ", cijena=" + cijena + ", student=" + student + '}';
+    }
     
     @OneToMany(mappedBy = "racun")
     private List<Opomena> opomene;

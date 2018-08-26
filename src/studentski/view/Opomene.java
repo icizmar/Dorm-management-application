@@ -11,17 +11,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import studentski.controller.Obrada;
+import studentski.controller.ObradaOpomena;
+import studentski.controller.ObradaRacun;
+import studentski.controller.ObradaStudentskiDom;
 import studentski.model.Opomena;
 import studentski.model.Racun;
 import studentski.model.Student;
+import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
 
 /**
@@ -40,8 +47,11 @@ public class Opomene extends javax.swing.JFrame {
     private Date prijasnjiMjesecKraj;
     private Date pocetakPijasnjeg;
     private Date krajPrijasnjeg;
-    private Obrada<Opomena> obradaOpomena;
-    private Obrada<Racun> obradaRacun;
+    private Obrada<Opomena> obrada;
+    private ObradaStudentskiDom obradaStudentskiDom;
+    private ObradaOpomena obradaOpomena;
+    private ObradaRacun obradaRacun;
+    private StudentskiDom studentskiDom;
     
     /**
      * Creates new form Opomene
@@ -54,8 +64,11 @@ public class Opomene extends javax.swing.JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         format = new SimpleDateFormat("yyyy-MM-dd");
-        obradaOpomena = new Obrada<>();
-        obradaRacun = new Obrada<>();
+        obrada = new Obrada<>();
+        obradaStudentskiDom = new ObradaStudentskiDom();
+        obradaRacun = new ObradaRacun();
+        obradaOpomena = new ObradaOpomena();
+        napuniDomove();
     }
 
     /**
@@ -81,6 +94,8 @@ public class Opomene extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         btnPojedinostiRacuna = new javax.swing.JButton();
         btnPojedinostiOpomene = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        cmbStudentskiDom = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -133,19 +148,23 @@ public class Opomene extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setText("Odaberi studentski dom:");
+
+        cmbStudentskiDom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbStudentskiDomActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbMjeseci, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -155,22 +174,34 @@ public class Opomene extends javax.swing.JFrame {
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
                                 .addGap(31, 31, 31)
                                 .addComponent(btnNapraviOpomenu)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnOpomenaPlacena, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                            .addComponent(btnPojedinostiOpomene, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(31, Short.MAX_VALUE))))
+                            .addComponent(btnPojedinostiOpomene, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbMjeseci, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                            .addComponent(cmbStudentskiDom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel6))
                 .addGap(18, 18, 18)
-                .addComponent(cmbMjeseci, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbMjeseci, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbStudentskiDom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -237,7 +268,7 @@ public class Opomene extends javax.swing.JFrame {
         opomena.setPlacenoNakonOpomene(false);
         opomena.setRacun(racun);
         opomena.setDatumUplateOpomene(null);
-        obradaOpomena.save(opomena);
+        obrada.save(opomena);
         JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste opomenu za studenta/icu " + student + " za "
                 + "mjesec " + odabraniMjesec);
         napuniListe();
@@ -255,7 +286,7 @@ public class Opomene extends javax.swing.JFrame {
         opomena.getRacun().setCijena(500);
         opomena.getRacun().setDatumUplateRacuna(new Date());
         opomena.getRacun().setPlacen(true);
-        obradaOpomena.save(opomena);
+        obrada.save(opomena);
         napuniListe();
     }//GEN-LAST:event_btnOpomenaPlacenaActionPerformed
 
@@ -305,6 +336,15 @@ public class Opomene extends javax.swing.JFrame {
         new PojedinostiOpomene(opomena).setVisible(true);
     }//GEN-LAST:event_btnPojedinostiOpomeneActionPerformed
 
+    private void cmbStudentskiDomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbStudentskiDomActionPerformed
+        studentskiDom = (StudentskiDom) cmbStudentskiDom.getSelectedItem();
+        if(studentskiDom == null){
+            JOptionPane.showMessageDialog(getRootPane(), "Ponovno odaverite studentski dom!");
+            return;
+        }
+        napuniListe();
+    }//GEN-LAST:event_cmbStudentskiDomActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -317,11 +357,13 @@ public class Opomene extends javax.swing.JFrame {
     private javax.swing.JButton btnPojedinostiOpomene;
     private javax.swing.JButton btnPojedinostiRacuna;
     private javax.swing.JComboBox<String> cmbMjeseci;
+    private javax.swing.JComboBox<StudentskiDom> cmbStudentskiDom;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JList<Student> jList1;
     private javax.swing.JList<Student> jList2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -385,23 +427,16 @@ public class Opomene extends javax.swing.JFrame {
     }
 
     private void napuniListe() {
+        
         DefaultListModel<Student> model = new DefaultListModel<>();
         DefaultListModel<Student> model1 = new DefaultListModel<>();
         List<Student> listaStudenataNeplacenaOpomena = new ArrayList<>();
         List<Student> listaStudenataNeizdavaOpomena = new ArrayList<>();
-        List<Racun> listaNeplacenihRacuna = HibernateUtil.getSession().createQuery(
-                " FROM Racun a WHERE a.obrisano=false AND a.placen=false "
-                        + " AND a.datumIzdavanjaRacuna BETWEEN :stDate AND :edDate ")
-                .setParameter("stDate", pocetakPijasnjeg)
-                .setParameter("edDate", krajPrijasnjeg)
-                .list();
-        List<Opomena> listaopomena = HibernateUtil.getSession().createQuery(
-                " FROM Opomena a WHERE a.obrisano=false AND a.placenoNakonOpomene=false "
-                        + " AND a.izdavanjeOpomene BETWEEN :stDate AND :edDate ")
-                .setParameter("stDate", pocetakTrenutnogMjeseca)
-                .setParameter("edDate", krajTrenutnogMjeseca)
-                .list();
-        for (Racun racun : listaNeplacenihRacuna) {
+        List<Racun> listaNeplacenihRacunaPijasnjiMjesec = obradaRacun.getListaSvihPlacenihUOdabranomMjesecuIDomu(studentskiDom, pocetakPijasnjeg, krajPrijasnjeg);
+                
+        List<Opomena> listaopomena = obradaOpomena.getNeplaceneOpomene(studentskiDom, pocetakTrenutnogMjeseca, krajTrenutnogMjeseca);
+                
+        for (Racun racun : listaNeplacenihRacunaPijasnjiMjesec) {
             listaStudenataNeizdavaOpomena.add(racun.getStudent());
             //model.addElement(racun.getStudent());
         }
@@ -438,5 +473,27 @@ public class Opomene extends javax.swing.JFrame {
             o = op;
         }
         return o;
+    }
+
+    private void napuniDomove() {
+        DefaultComboBoxModel cmbStuDom = new DefaultComboBoxModel();
+        List<StudentskiDom> listaDomova = obradaStudentskiDom.dohvatiSveDomove();
+        if(listaDomova.size()== 0){
+            JOptionPane.showMessageDialog(getRootPane(), "Nema unesenih domova za pregled opomena, molim unesite ih!");
+            new StudentskiDomovi().setVisible(true);
+            dispose();
+            return;
+        }else{
+            listaDomova.forEach(element -> {
+                cmbStuDom.addElement(element);
+            });
+            cmbStudentskiDom.setModel(cmbStuDom);
+            cmbStudentskiDom.setSelectedIndex(0);
+            studentskiDom = (StudentskiDom) cmbStudentskiDom.getSelectedItem();
+        }
+        Date date = new Date();
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int month = localDate.getMonthValue()-1;
+        cmbMjeseci.setSelectedIndex(month);
     }
 }

@@ -41,11 +41,13 @@ public class ObradaPaviljon {
         obrada.delete(pav);
     }
     
-    public DefaultListModel<Paviljon> ucitajPaviljone(){
+    public DefaultListModel<Paviljon> ucitajPaviljone(StudentskiDom stuDom){
         DefaultListModel<Paviljon> dlmPaviljon = new DefaultListModel<>();
         Session s = HibernateUtil.getSession();
         s.clear();
-        List<Paviljon> listaSvihPaviljona = s.createQuery( " from Paviljon a where a.obrisano=false ").list();
+        List<Paviljon> listaSvihPaviljona = s.createQuery( " from Paviljon a where a.obrisano=false "
+                + "AND a.studentskiDom = :uvjet")
+                .setString("uvjet", String.valueOf(stuDom.getSifra())).list();
         listaSvihPaviljona.forEach(x -> {
             dlmPaviljon.addElement(x);
         });
@@ -56,9 +58,9 @@ public class ObradaPaviljon {
         Session s = HibernateUtil.getSession();
         s.clear();
         List<Paviljon> listaPaviljona = s.createQuery( 
-                " from Paviljon a where a.obrisano=false and studentskiDom like :uvjet")
-                .setString("uvjet", "%" + stuDom.getSifra() + "%")
-                .list();
+                " from Paviljon a where a.obrisano=false "
+                + "AND a.studentskiDom = :uvjet")
+                .setString("uvjet", String.valueOf(stuDom.getSifra())).list();
         return listaPaviljona;
     }
 }
