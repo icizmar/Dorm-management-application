@@ -29,7 +29,6 @@ import studentski.model.Opomena;
 import studentski.model.Racun;
 import studentski.model.Student;
 import studentski.model.StudentskiDom;
-import studentski.pomocno.HibernateUtil;
 
 /**
  *
@@ -69,6 +68,7 @@ public class Opomene extends javax.swing.JFrame {
         obradaRacun = new ObradaRacun();
         obradaOpomena = new ObradaOpomena();
         napuniDomove();
+        postavljenjeTrenutnogMjeseca();
     }
 
     /**
@@ -246,23 +246,12 @@ public class Opomene extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali studenta!");
             return;
         }
-        boolean provjeraOpomena = false;
-        provjeraOpomena = provjeraOp(student);
+        boolean provjeraOpomena = obradaOpomena.provjeraOp(student, pocetakTrenutnogMjeseca, krajTrenutnogMjeseca);
         if(!provjeraOpomena){
             JOptionPane.showMessageDialog(getRootPane(), "Student već ima izdanu opomenu!");
             return;
         }
-        Racun racun = new Racun();
-        List<Racun> Racun = HibernateUtil.getSession().createQuery(
-                " FROM Racun a WHERE a.obrisano=false AND a.student like :uvjet AND a.placen=false "
-                        + " AND a.datumIzdavanjaRacuna BETWEEN :stDate AND :edDate ")
-                .setString("uvjet", "%" + student.getSifra() + "%")
-                .setParameter("stDate", pocetakPijasnjeg)
-                .setParameter("edDate", krajPrijasnjeg)
-                .list();
-        for (Racun rac : Racun) {
-            racun = rac;
-        }
+        Racun racun = obradaRacun.getRacunZaPojedinosti(student, pocetakPijasnjeg, krajPrijasnjeg);
         Opomena opomena = new Opomena();
         opomena.setIzdavanjeOpomene(new Date());
         opomena.setPlacenoNakonOpomene(false);
@@ -270,7 +259,7 @@ public class Opomene extends javax.swing.JFrame {
         opomena.setDatumUplateOpomene(null);
         obrada.save(opomena);
         JOptionPane.showMessageDialog(getRootPane(), "Unjeli ste opomenu za studenta/icu " + student + " za "
-                + "mjesec " + odabraniMjesec);
+                + "mjesec " + String.valueOf(cmbMjeseci.getItemAt(cmbMjeseci.getSelectedIndex()-1)));
         napuniListe();
     }//GEN-LAST:event_btnNapraviOpomenuActionPerformed
 
@@ -280,7 +269,7 @@ public class Opomene extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali studenta koji je platio opomenu!");
             return;
         }
-        Opomena opomena = pronadjiOpomenu(student);
+        Opomena opomena = obradaOpomena.pronadjiOpomenu(student, pocetakTrenutnogMjeseca, krajTrenutnogMjeseca);
         opomena.setDatumUplateOpomene(new Date());
         opomena.setPlacenoNakonOpomene(true);
         opomena.getRacun().setCijena(500);
@@ -301,16 +290,7 @@ public class Opomene extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali mjesec za pregled računa");
             return;
         }
-        Racun r = new Racun();
-        List<Racun> listaRacuna = HibernateUtil.getSession().createQuery(
-                "FROM Racun a WHERE a.obrisano=false and student like :uvjet and a.datumIzdavanjaRacuna BETWEEN :stDate AND :edDate ")
-                .setString("uvjet", "%" + student.getSifra() + "%")
-                .setParameter("stDate", pocetakPijasnjeg)
-                .setParameter("edDate", krajPrijasnjeg)
-                .list();
-        for (Racun racun : listaRacuna) {
-            r = racun;
-        }
+        Racun r = obradaRacun.getRacunZaPojedinosti(student, pocetakPijasnjeg, krajPrijasnjeg);
         new PojedinostiRacuna(r).setVisible(true);
     }//GEN-LAST:event_btnPojedinostiRacunaActionPerformed
 
@@ -320,19 +300,7 @@ public class Opomene extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Niste odabrali sudenta za pregled opomene");
             return;
         }
-        List<Opomena> listaopomena = HibernateUtil.getSession().createQuery(
-                " FROM Opomena a WHERE a.obrisano=false AND a.placenoNakonOpomene=false "
-                        + " AND a.izdavanjeOpomene BETWEEN :stDate AND :edDate ")
-                .setParameter("stDate", pocetakTrenutnogMjeseca)
-                .setParameter("edDate", krajTrenutnogMjeseca)
-                .list();
-        Opomena opomena = new Opomena();
-        for (Opomena o : listaopomena) {
-            if(student.getSifra() != o.getRacun().getStudent().getSifra()){
-                continue;
-            }
-            opomena = o;
-        }
+        Opomena opomena = obradaOpomena.getOpomena(student, pocetakTrenutnogMjeseca, krajTrenutnogMjeseca);
         new PojedinostiOpomene(opomena).setVisible(true);
     }//GEN-LAST:event_btnPojedinostiOpomeneActionPerformed
 
@@ -342,6 +310,7 @@ public class Opomene extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(getRootPane(), "Ponovno odaverite studentski dom!");
             return;
         }
+        postavljenjeTrenutnogMjeseca();
         napuniListe();
     }//GEN-LAST:event_cmbStudentskiDomActionPerformed
 
@@ -411,70 +380,42 @@ public class Opomene extends javax.swing.JFrame {
         }
     }
 
-    private boolean provjeraOp(Student student) {
-        List<Opomena> listaOpomena = HibernateUtil.getSession().createQuery(
-                " FROM Opomena a WHERE a.obrisano=false "
-                        + " AND a.izdavanjeOpomene BETWEEN :stDate AND :edDate ")
-                .setParameter("stDate", pocetakTrenutnogMjeseca)
-                .setParameter("edDate", krajTrenutnogMjeseca)
-                .list();
-        for (Opomena opomena : listaOpomena) {
-            if(opomena.getRacun().getStudent().getSifra() == student.getSifra()){
-                return false;
-            }
-        }
-        return true;
-    }
+    
 
     private void napuniListe() {
         
-        DefaultListModel<Student> model = new DefaultListModel<>();
-        DefaultListModel<Student> model1 = new DefaultListModel<>();
+        DefaultListModel<Student> modelNeizdanih = new DefaultListModel<>();
+        DefaultListModel<Student> modelIzdanih = new DefaultListModel<>();
         List<Student> listaStudenataNeplacenaOpomena = new ArrayList<>();
         List<Student> listaStudenataNeizdavaOpomena = new ArrayList<>();
-        List<Racun> listaNeplacenihRacunaPijasnjiMjesec = obradaRacun.getListaSvihPlacenihUOdabranomMjesecuIDomu(studentskiDom, pocetakPijasnjeg, krajPrijasnjeg);
-                
+        List<Racun> listaNeplacenihRacunaPijasnjiMjesec = obradaRacun.getListaSvihNelacenihUOdabranomMjesecuIDomu(studentskiDom, pocetakPijasnjeg, krajPrijasnjeg);
         List<Opomena> listaopomena = obradaOpomena.getNeplaceneOpomene(studentskiDom, pocetakTrenutnogMjeseca, krajTrenutnogMjeseca);
-                
-        for (Racun racun : listaNeplacenihRacunaPijasnjiMjesec) {
+        listaNeplacenihRacunaPijasnjiMjesec.forEach((racun) -> {
             listaStudenataNeizdavaOpomena.add(racun.getStudent());
-            //model.addElement(racun.getStudent());
-        }
-        Student s;
-        for (Opomena opomena : listaopomena) {
-            s = new Student();
-            s = opomena.getRacun().getStudent();
-            listaStudenataNeplacenaOpomena.add(s);
-            //model1.addElement(s);
-        }
-        listaStudenataNeizdavaOpomena.removeAll(listaStudenataNeplacenaOpomena);
+        });
+        listaopomena.forEach(opomena -> {
+            listaStudenataNeplacenaOpomena.add(opomena.getRacun().getStudent());
+        });
         for (Student student : listaStudenataNeizdavaOpomena) {
-            model.addElement(student);
+            System.out.println(student.getSifra());
         }
         for (Student student : listaStudenataNeplacenaOpomena) {
-            model1.addElement(student);
+            System.out.println(student.getSifra());
         }
-        jList1.setModel(model);
-        jList2.setModel(model1);
+        
+        listaStudenataNeplacenaOpomena.forEach(element -> {
+            listaStudenataNeizdavaOpomena.remove(element);
+        });
+        listaStudenataNeizdavaOpomena.forEach((student) -> {
+            modelNeizdanih.addElement(student);
+        });
+        listaStudenataNeplacenaOpomena.forEach((student) -> {
+            modelIzdanih.addElement(student);
+        });
+        jList1.setModel(modelNeizdanih);
+        jList2.setModel(modelIzdanih);
     }
-
-    private Opomena pronadjiOpomenu(Student student) {
-        Opomena o = new Opomena();
-        List<Opomena> opomena = HibernateUtil.getSession().createQuery(
-                "FROM Opomena a WHERE a.obrisano=false AND a.placenoNakonOpomene=false "
-                        + " AND a.izdavanjeOpomene BETWEEN :stDate AND :edDate ")
-                .setParameter("stDate", pocetakTrenutnogMjeseca)
-                .setParameter("edDate", krajTrenutnogMjeseca)
-                .list();
-        for (Opomena op : opomena) {
-            if(op.getRacun().getStudent().getSifra()!=student.getSifra()){
-                continue;
-            }
-            o = op;
-        }
-        return o;
-    }
-
+    
     private void napuniDomove() {
         DefaultComboBoxModel cmbStuDom = new DefaultComboBoxModel();
         List<StudentskiDom> listaDomova = obradaStudentskiDom.dohvatiSveDomove();
@@ -491,6 +432,10 @@ public class Opomene extends javax.swing.JFrame {
             cmbStudentskiDom.setSelectedIndex(0);
             studentskiDom = (StudentskiDom) cmbStudentskiDom.getSelectedItem();
         }
+        
+    }
+
+    private void postavljenjeTrenutnogMjeseca() {
         Date date = new Date();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         int month = localDate.getMonthValue()-1;

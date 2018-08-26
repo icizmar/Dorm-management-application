@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import org.hibernate.Session;
 import studentski.model.Opomena;
+import studentski.model.Student;
 import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
 
@@ -43,6 +44,59 @@ public class ObradaOpomena {
                 .setParameter("startDate", pocetakTrenutnogMjeseca)
                 .setParameter("endDate", krajTrenutnogMjeseca)
                 .list();
+    }
+
+    public Opomena getOpomena(Student student, Date pocetakTrenutnogMjeseca, Date krajTrenutnogMjeseca) {
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        List<Opomena> listaOpomena = s.createQuery(
+                " FROM Opomena a WHERE a.obrisano=false AND a.placenoNakonOpomene=false "
+                        + " AND a.izdavanjeOpomene BETWEEN :stDate AND :edDate ")
+                .setParameter("stDate", pocetakTrenutnogMjeseca)
+                .setParameter("edDate", krajTrenutnogMjeseca)
+                .list();
+        Opomena opomena = new Opomena();
+        for (Opomena o : listaOpomena) {
+            if(student.getSifra() != o.getRacun().getStudent().getSifra()){
+                continue;
+            }
+            opomena = o;
+        }
+        return opomena;
+    }
+
+    public boolean provjeraOp(Student student, Date pocetakTrenutnogMjeseca, Date krajTrenutnogMjeseca) {
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        List<Opomena> listaOpomena = s.createQuery(
+                " FROM Opomena a WHERE a.obrisano=false "
+                        + " AND a.izdavanjeOpomene BETWEEN :stDate AND :edDate ")
+                .setParameter("stDate", pocetakTrenutnogMjeseca)
+                .setParameter("edDate", krajTrenutnogMjeseca)
+                .list();
+        for (Opomena opomena : listaOpomena) {
+            if(opomena.getRacun().getStudent().getSifra() == student.getSifra()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Opomena pronadjiOpomenu(Student student, Date pocetakTrenutnogMjeseca, Date krajTrenutnogMjeseca) {
+        Opomena o = new Opomena();
+        List<Opomena> opomena = HibernateUtil.getSession().createQuery(
+                "FROM Opomena a WHERE a.obrisano=false AND a.placenoNakonOpomene=false "
+                        + " AND a.izdavanjeOpomene BETWEEN :stDate AND :edDate ")
+                .setParameter("stDate", pocetakTrenutnogMjeseca)
+                .setParameter("edDate", krajTrenutnogMjeseca)
+                .list();
+        for (Opomena op : opomena) {
+            if(op.getRacun().getStudent().getSifra()!=student.getSifra()){
+                continue;
+            }
+            o = op;
+        }
+        return o;
     }
     
     

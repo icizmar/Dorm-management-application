@@ -7,7 +7,6 @@ package studentski.controller;
 
 import java.util.Date;
 import java.util.List;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import studentski.model.Racun;
 import studentski.model.Student;
@@ -78,7 +77,7 @@ public class ObradaRacun {
                         "inner join StudentskiDom as sd on sd.sifra = pa.studentskiDom " +
                         "where sd = :uvjet " +
                         "and r.obrisano = false " +
-                        "and r.placeno = false " +
+                        "and r.placen = false " +
                         "and r.datumIzdavanjaRacuna between :startDate and :endDate")
                         .setString("uvjet", String.valueOf(stuDom.getSifra()))
                         .setParameter("startDate", pMjeseca)

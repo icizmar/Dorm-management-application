@@ -65,4 +65,24 @@ public abstract class Entitet {
     public void setObrisano(boolean obrisano) {
         this.obrisano = obrisano;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Entitet other = (Entitet) obj;
+        if (this.sifra != other.sifra) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

@@ -3,13 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/NetBeansVjezba/StudentskiDomAPP/src/studentski/view/Opomene.java</file>
             <file>file:/C:/NetBeansVjezba/StudentskiDomAPP/src/studentski/controller/ObradaRacun.java</file>
-            <file>file:/C:/NetBeansVjezba/StudentskiDomAPP/src/studentski/view/Racuni.java</file>
-            <file>file:/C:/NetBeansVjezba/StudentskiDomAPP/src/hibernate.cfg.xml</file>
-            <file>file:/C:/NetBeansVjezba/StudentskiDomAPP/src/studentski/model/Soba.java</file>
-            <file>file:/C:/NetBeansVjezba/StudentskiDomAPP/src/studentski/model/Racun.java</file>
-            <file>file:/C:/NetBeansVjezba/StudentskiDomAPP/src/studentski/Start.java</file>
-            <file>file:/C:/NetBeansVjezba/StudentskiDomAPP/src/studentski/controller/ObradaStudent.java</file>
+            <file>file:/C:/NetBeansVjezba/StudentskiDomAPP/src/studentski/controller/ObradaOpomena.java</file>
         </group>
     </open-files>
 </project-private>
