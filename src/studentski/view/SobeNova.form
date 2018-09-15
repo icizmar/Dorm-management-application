@@ -27,14 +27,12 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="btnDodajNoviDom" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                      <Component id="jLabel3" alignment="1" min="-2" pref="66" max="-2" attributes="0"/>
-                      <Component id="cmbBrojKreveta" min="-2" pref="66" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="cmbBrojKreveta" alignment="0" min="-2" pref="66" max="-2" attributes="0"/>
                   <Component id="txtBrojSobe" alignment="0" pref="152" max="32767" attributes="0"/>
                   <Component id="jLabel2" alignment="0" min="-2" pref="66" max="-2" attributes="0"/>
                   <Component id="jLabel1" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
                   <Component id="lblPaviljon" max="32767" attributes="0"/>
+                  <Component id="jLabel3" alignment="0" min="-2" pref="80" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="39" max="32767" attributes="0"/>
           </Group>
@@ -82,7 +80,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnDodajNoviDom">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Dodaj novi"/>
+        <Property name="text" type="java.lang.String" value="Dodaj novu"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDodajNoviDomActionPerformed"/>
