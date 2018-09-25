@@ -6,7 +6,6 @@
 package studentski.controller;
 
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import org.hibernate.Session;
 import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
@@ -28,5 +27,12 @@ public class ObradaStudentskiDom {
         s.clear();
         List<StudentskiDom> listaDomova =  s.createQuery( " from StudentskiDom a where a.obrisano = false ").list();
         return listaDomova;
+    }
+
+    public List<StudentskiDom> getSviDomovi() {
+        Session s = HibernateUtil.getSession();
+        s.clear();
+        return s.createQuery(
+                "from StudentskiDom a where a.obrisano = false ").list();
     }
 }

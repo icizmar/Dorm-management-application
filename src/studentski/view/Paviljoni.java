@@ -12,7 +12,6 @@ import studentski.controller.ObradaPaviljon;
 import studentski.controller.StucException;
 import studentski.model.Paviljon;
 import studentski.model.Soba;
-import studentski.model.Student;
 import studentski.model.StudentskiDom;
 
 /**

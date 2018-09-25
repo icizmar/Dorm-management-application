@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import studentski.controller.Obrada;
+import studentski.controller.ObradaStudentskiDom;
 import studentski.model.Paviljon;
 import studentski.model.StudentskiDom;
 import studentski.pomocno.HibernateUtil;
@@ -26,6 +27,7 @@ import studentski.pomocno.HibernateUtil;
 public class StudentskiDomovi extends javax.swing.JFrame {
     
     private Obrada<StudentskiDom> obrada;
+    private ObradaStudentskiDom obradaStudentskiDom;
     private Border obrub;
 
     /**
@@ -38,6 +40,7 @@ public class StudentskiDomovi extends javax.swing.JFrame {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
         obrada = new Obrada<>();
+        obradaStudentskiDom = new ObradaStudentskiDom();
         obrub = txtNaziv.getBorder();
         ucitajPodatke();
     }
@@ -260,12 +263,11 @@ public class StudentskiDomovi extends javax.swing.JFrame {
 
     private void ucitajPodatke() {
         DefaultListModel<StudentskiDom> m = new DefaultListModel<>();
-        List<StudentskiDom> lista = HibernateUtil.getSession().createQuery(
-                "from StudentskiDom a where a.obrisano = false ").list();
+        List<StudentskiDom> listaStudentskihDomova = obradaStudentskiDom.getSviDomovi();
                 
-        for (StudentskiDom studentskiDom : lista) {
+        listaStudentskihDomova.forEach((studentskiDom) -> {
             m.addElement(studentskiDom);
-        }
+        });
         this.lista.setModel(m);
     }
 

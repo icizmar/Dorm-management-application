@@ -12,8 +12,6 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import studentski.model.Entitet;
-import studentski.model.Opomena;
-import studentski.model.StudentskiDom;
 
 /**
  *
